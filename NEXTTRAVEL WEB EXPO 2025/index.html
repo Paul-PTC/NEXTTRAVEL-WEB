@@ -1,75 +1,142 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Bootstrap 4 Menu - Light/Dark</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&subset=devanagari,latin-ext">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="CSS/navbar.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicia Sesión</title>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="CSS/login.css">
 </head>
-<body>	
+<body>
+  <div class="container">
+    <!-- SECCIÓN DE LOGIN -->
+    <div class="form-box login">
+      <form id="loginForm">
+        <h1>login</h1>
+        <div class="input-box">
+          <input type="text" placeholder="Nombre de Usuario" name="loginUsuario">
+          <i class='bx bxs-user'></i>
+          <div class="error-message"></div>
+        </div>
+        <div class="input-box">
+          <input type="password" placeholder="Contraseña" name="loginContrasena" id="loginPassword" autocomplete="new-password">
+          <i class='bx bx-show password-toggle-icon' id="loginPasswordIcon"></i>
+          <div class="error-message"></div>
+        </div>
+        <div class="forgot-link">
+          <a href="#">Olvidó la contraseña?</a>
+        </div>
+        <button type="submit" class="btn">Iniciar Sesión</button>
+        <p>ó inicia sesión con plataformas sociales</p>
+        <div class="social-icons">
+          <a href="#"><i class='bx bxl-google' ></i></a>
+          <a href="#"><i class='bx bxl-facebook' ></i></a>
+          <a href="#"><i class='bx bxl-github' ></i></a>
+          <a href="#"><i class='bx bxl-linkedin' ></i></a>
+        </div>
+      </form>
+    </div>
 
-	<div class="navigation-wrap bg-light start-header start-style">
-		<div class="container">
-			<div class="row">
-				<div class="col-12">
-					<nav class="navbar navbar-expand-md navbar-light">
-						<a class="navbar-brand" href="#" target="_blank"><img src="https://assets.codepen.io/1462889/fcy.png" alt="Logo NEXT TRAVEL"></a>	
-						<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-							<span class="navbar-toggler-icon"></span>
-						</button>
-						<div class="collapse navbar-collapse" id="navbarSupportedContent">
-							<ul class="navbar-nav ml-auto py-4 py-md-0">
-								<li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-									<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Planes</a>
-									<div class="dropdown-menu">
-										<a class="dropdown-item" href="#">Planes Estándar</a>
-										<a class="dropdown-item" href="#">Promociones</a>
-									</div>
-								</li>
-								<li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-									<a class="nav-link" href="#">Clientes</a>
-								</li>
-								<li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-									<a class="nav-link" href="#">Empleados</a>
-								</li>
-								<li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-									<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Chat</a>
-									<div class="dropdown-menu">
-										<a class="dropdown-item" href="#">Cliente</a>
-										<a class="dropdown-item" href="#">Empleados</a>
-									</div>
-								</li>
-								<li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-									<a class="nav-link" href="#">Ganancias</a>
-								</li>
-								<li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-									<a class="nav-link" href="#">Cuenta</a>
-								</li>
-                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                    <a href="#" class="nav-link" id="theme-toggle">
-                                        <i class="fas fa-moon"></i>
-                                    </a>
-                                </li>
-							</ul>
-						</div>
-					</nav>		
-				</div>
-			</div>
-		</div>
-	</div>
+    <!-- SECCIÓN DE REGISTRO CON PASOS -->
+    <div class="form-box register">
+      <form id="multiStepForm">
+        <h1>Registrarse</h1>
+        
+        <div class="progress-bar">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
 
-	<!-- CONTENIDO CENTRADO PARA AÑADIR AL INICIO -->
-	<div class="section full-height d-flex flex-column justify-content-center align-items-center">
-        <div class="text-center">
+        <!-- Paso 1: Datos de la Cuenta -->
+        <div class="step active">
+            <div class="input-box">
+                <input type="text" placeholder="Nombre de Usuario" name="usuario">
+                <i class='bx bxs-user'></i>
+                <div class="error-message"></div>
+            </div>
+            <div class="input-box">
+                <input type="email" placeholder="Correo" name="correo">
+                <i class='bx bxs-envelope'></i>
+                <div class="error-message"></div>
+            </div>
+            <div class="input-box">
+                <input type="password" placeholder="Contraseña" name="contrasena" id="registerPassword" autocomplete="new-password">
+                <i class='bx bx-show password-toggle-icon' id="registerPasswordIcon"></i>
+                <div class="error-message"></div>
+            </div>
+        </div>
 
-        </div>	
-	</div>
-	
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <script src="JS/navbar.js"></script>
+        <!-- Paso 2: Información Personal -->
+        <div class="step">
+            <div class="input-box">
+                <input type="text" placeholder="Nombre Completo" name="nombreCompleto">
+                <i class='bx bxs-user-detail'></i>
+                <div class="error-message"></div>
+            </div>
+            <div class="input-box">
+                <input type="tel" placeholder="Número de Teléfono (8 dígitos)" name="telefono">
+                <i class='bx bxs-phone'></i>
+                <div class="error-message"></div>
+            </div>
+        </div>
+
+        <!-- Paso 3: Verificación de Identidad -->
+        <div class="step">
+            <div class="input-box">
+                <input type="text" placeholder="DUI (9 dígitos sin guiones)" name="dui">
+                <i class='bx bxs-id-card'></i>
+                <div class="error-message"></div>
+            </div>
+        </div>
+
+        <!-- Paso 4: Selección de Rol -->
+        <div class="step">
+            <div class="input-box">
+                <select name="rol">
+                    <option value="" disabled selected>Selecciona tu rol</option>
+                    <option value="Cliente">Soy un Cliente</option>
+                    <option value="Empleado">Soy un Empleado</option>
+                </select>
+                <i class='bx bx-chevron-down'></i>
+                <div class="error-message"></div>
+            </div>
+        </div>
+        
+        <div class="form-navigation-btns">
+            <button type="button" class="btn" id="prevBtn">Anterior</button>
+            <button type="button" class="btn" id="nextBtn">Siguiente</button>
+        </div>
+        
+        <p>ó registrese con plataformas sociales</p>
+        <div class="social-icons">
+            <a href="#"><i class='bx bxl-google' ></i></a>
+            <a href="#"><i class='bx bxl-facebook' ></i></a>
+            <a href="#"><i class='bx bxl-github' ></i></a>
+            <a href="#"><i class='bx bxl-linkedin' ></i></a>
+        </div> 
+      </form>
+    </div>
+
+    <!-- PANEL DESLIZABLE -->
+    <div class="toggle-box">
+      <div class="toggle-panel toggle-left">
+        <h1>Hola, Bienvenido!</h1>
+        <p>No tienes una cuenta?</p>
+        <button class="btn register-btn">Registrarse</button>
+      </div>
+      <div class="toggle-panel toggle-right">
+        <h1>¡Bienvenido!</h1>
+        <p>Ya tienes una cuenta?</p>
+        <button class="btn login-btn">Iniciar Sesión</button>
+      </div>
+    </div>
+  </div>
+  
+    <script>
+      document.getElementById("loginBtn").addEventListener("click", function () {
+       window.location.href = ".html";
+      });
+    </script>
+
+  <script type="module" src="JS/Controllers/usuarioController.js"></script>
 </body>
 </html>

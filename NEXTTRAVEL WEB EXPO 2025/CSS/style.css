@@ -1,0 +1,23 @@
+body {
+    font-family: 'Inter', sans-serif;
+    /* Fondo de imagen sutil para el modo claro para resaltar el efecto de vidrio */
+    background-image: url('https://images.unsplash.com/photo-1619468129361-605ebea04b44?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    transition: background-image 0.5s ease-in-out;
+}
+.dark body {
+     /* Fondo de imagen para el modo oscuro */
+    background-image: url('https://images.unsplash.com/photo-1532372576444-dda95419408b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+}
+
+.modal-transition {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+.spinner {
+    animation: spin 1s linear infinite;
+}
