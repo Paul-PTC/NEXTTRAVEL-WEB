@@ -12,17 +12,16 @@
       "fechaVencimientoRevision": "2025-10-31"
 */ 
 
-const API_URL = 'http://localhost:8080/apivehiculo';
+//const API_URL = 'http://localhost:8080/apivehiculo';
 
 
-
-export async function ObtenerVehiculos(page = 0, size = 10){
+/*export async function ObtenerVehiculos(page = 0, size = 10){
     const res = await fetch(`${API_URL}/vehiculos?page=${page}&size=${size}`)
     return res.json();   
 }
 
 export async function ObtenerVehiculosPorID(page = 0, size = 10, id){
-    const res = await fetch(`${API_URL}/vehiculos?page=${page}&size=${size}/vehiculos/${id}`)
+    const res = await fetch(`${API_URL}/vehiculos/vehiculos/${id}?page=${page}&size=${size}`)
     return res.json();   
 }
 
@@ -46,5 +45,42 @@ export async function ActualizarVehiculo(id, data){
 
 export async function BorrarVehiculo(id){
     await fetch(`${API_URL}/eliminar/${id}`, {method: 'DELETE'});
+}*/
+
+
+
+const API_URL = 'https://retoolapi.dev/Iz9uar/NextTarvel'
+
+
+
+export async function ObtenerVehiculos(){
+    const res = await fetch(`${API_URL}/Iz9uar/NextTarvel?_page=2&_limit=10`)
+    return res.json();   
+};
+
+
+export async function InsertarVehiculos(data){
+    const res = await fetch(`${API_URL}/Iz9uar/NextTarvel`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(data),
+    });
 }
+
+//Iz9uar/NextTarvel/1
+
+export async function ActualizarVehiculo(id, data){
+    await fetch(`${API_URL}/Iz9uar/NextTarvel/${id}`,{
+        method: 'PUT',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(data),
+    });
+}
+
+
+export async function BorrarVehiculo(id){
+    await fetch(`${API_URL}/Iz9uar/NextTarvel/${id}`, {method: 'DELETE'});
+}
+
+
 
