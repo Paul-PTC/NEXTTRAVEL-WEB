@@ -73,7 +73,7 @@
 
     <!-- Tabla -->
     <div class="table-responsive">
-      <table class="table table-hover align-middle" id="itemsTable">
+      <table class="table table-hover align-middle" id="itemTable">
         <thead class="table-primary">
         <tr>
           <th>ID Vehiculo</th>
@@ -107,7 +107,7 @@
           <h5 class="modal-title" id="itemModalLabel">Agregar Vehiculo</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
-        <form id="productForm">
+        <form id="VehiculoForm">
           <!-- IDs/ocultos -->
           <input type="hidden" id="IdVehiculo" />
           <input type="hidden" id="VehiculoImagenUrl" />
@@ -115,10 +115,10 @@
           <div class="modal-body">
             <!-- Imagen -->
             <div class="mb-3">
-              <label for="productImageFile" class="form-label">Imagen del Vehiculo</label>
+              <label for="VehiculoImageFile" class="form-label">Imagen del Vehiculo</label>
               <input type="file" class="form-control" id="productImageFile" accept="image/*" />
               <div class="mt-2">
-                <img id="productImagePreview" class="img-preview" alt="Vista previa" src="" />
+                <img id="VehiculoImagePreview" class="img-preview" alt="Vista previa" src="" />
               </div>
               <div class="form-text">Si no seleccionas una imagen, se conservará (en edición) o quedará vacía (en creación).</div>
             </div>

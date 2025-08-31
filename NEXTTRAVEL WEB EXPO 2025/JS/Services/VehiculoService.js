@@ -53,8 +53,8 @@ const API_URL = 'https://retoolapi.dev/Iz9uar/NextTarvel'
 
 
 
-export async function ObtenerVehiculos(){
-    const res = await fetch(`${API_URL}/Iz9uar/NextTarvel?_page=2&_limit=10`)
+export async function ObtenerVehiculos(page = 0,size = 10){
+    const res = await fetch(`${API_URL}/Iz9uar/NextTarvel?_page=${page}&_limit=${size}`)
     return res.json();   
 };
 
