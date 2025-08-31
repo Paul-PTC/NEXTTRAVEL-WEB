@@ -1,0 +1,21 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-image: url('https://images.unsplash.com/photo-1554147090-e1221a04a025?q=80&w=2070&auto=format&fit=crop');
+}
+/* Estilos para validación de formulario */
+.input-error {
+    border-color: #ef4444; /* red-500 */
+}
+.input-error:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.5);
+}
+/* Estilo para la pestaña activa */
+.tab-active {
+    border-color: #3b82f6; /* blue-500 */
+    color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.1);
+}

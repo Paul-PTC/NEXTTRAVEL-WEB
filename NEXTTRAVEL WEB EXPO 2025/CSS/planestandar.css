@@ -1,0 +1,24 @@
+body {
+            font-family: 'Inter', sans-serif;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-image: url('https://images.unsplash.com/photo-1554147090-e1221a04a025?q=80&w=2070&auto=format&fit=crop');
+        }
+        .modal-transition {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .table-image {
+            width: 120px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+        /* Estilos para validación de formulario */
+        .input-error {
+            border-color: #ef4444; /* red-500 */
+        }
+        .input-error:focus {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.5);
+        }
