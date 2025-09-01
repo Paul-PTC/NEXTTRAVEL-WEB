@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const payload = {
             placa: form.Placa.value.trim(),
             modelo: form.Modelo.value.trim(),
-            capacidad: Number(form.Marca.value),
+            capacidad: Number(form.Capacidad.value),
             AnioFabricacion: form.anio.value,
             estado: form.Estado.value,
         };
@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
                 btnDel.addEventListener("click", () => {
                     if(confirm("¿Desea Eliminar este Vehiculo?")){
-                        BorrarVehiculo(item.id);
+                        EliminarVehiculo(item.id);
                     }
                 });
                 tdBtns.appendChild(btnDel);
@@ -148,11 +148,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     //para restablecer el Formulario
     function setFromulario(item){
-        form.IdVehiculo.value = item.id;
+        form.IdVehiculo.value = item.idVehiculo;
         form.Placa.value = item.placa;
         form.Modelo.value = item.modelo;
-        form.Marca.value = item.marca;
-        form.anio.value = item.AnioFabricacion;
+        form.Capacidad.value = item.capacidad;
+        form.anio.value = item.anio;
         form.Estado.value = item.estado;
 
         ModalLabel.textContent = "Editar Producto";
@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     //Eliminar vehiculo
-    async function ElimianrVehiculo(id){
+    async function EliminarVehiculo(id){
         try{
             await BorrarVehiculo(id);
             await ObtenerVehiculos();
