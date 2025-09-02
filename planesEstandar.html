@@ -3,185 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Planes Estándar</title>
-
-    <!-- Librerías Externas -->
+    <title>Gestión de Planes Turísticos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="CSS/planestandar.css">
-    
-    <!-- Script de Cloudinary -->
-    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="CSS/style.css">
     <script>
-        tailwind.config = { darkMode: 'class' }
+        tailwind.config = {
+            darkMode: 'class',
+        }
     </script>
-    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        nav .h-16, nav .h-14, nav .text-2xl, nav .text-xl {
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
 </head>
-<body class="antialiased">
-
-    <!-- NAVBAR INTEGRADO -->
+<body class="antialiased bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
     <header>
-        <nav class="bg-white/60 backdrop-blur-xl shadow-md sticky top-0 z-50 ring-1 ring-black ring-opacity-5 dark:bg-gray-800/60 dark:ring-white/10">
+        <nav class="bg-white/60 backdrop-blur-xl shadow-md fixed top-0 z-50 w-full ring-1 ring-black ring-opacity-5 dark:bg-gray-800/60 dark:ring-white/10">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
                     <div class="flex-shrink-0">
                         <a href="#" class="flex items-center space-x-2">
-                            <span class="text-2xl font-bold text-gray-800 dark:text-white">F.C</span>
+                            <span class="text-2xl font-bold text-gray-900 dark:text-white">F.C</span>
                         </a>
                     </div>
                     <div class="hidden md:flex items-center space-x-1">
+                        <a href="planes.html" class="bg-blue-600 text-white px-3 py-2 rounded-lg text-sm font-medium" aria-current="page">Paquetes</a>
+                        <a href="clientes.html" class="text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300 dark:hover:text-white">Clientes</a>
+                        <a href="usuario.html" class="text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300 dark:hover:text-white">Usuarios</a>
+                        <a href="empleados.html" class="text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300 dark:hover:text-white">Empleados</a>
                         <div class="relative" data-dropdown>
-                            <button type="button" class="bg-blue-600 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300 flex items-center" data-dropdown-button>
-                                Planes <i class="bi bi-chevron-down ml-1 text-xs"></i>
-                            </button>
-                            <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 ring-1 ring-black ring-opacity-5 hidden z-10" data-dropdown-menu>
-                                <a href="planes.html" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">Planes Estándar</a>
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">Promociones</a>
-                            </div>
-                        </div>
-                        <a href="clientes.html" class="text-gray-600 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300">Clientes</a>
-                        <a href="empleados.html" class="text-gray-600 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300">Empleados</a>
-                        <div class="relative" data-dropdown>
-                             <button type="button" class="text-gray-600 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300 flex items-center" data-dropdown-button>
+                            <button type="button" class="text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300 dark:hover:text-white flex items-center" data-dropdown-button>
                                 Chat <i class="bi bi-chevron-down ml-1 text-xs"></i>
                             </button>
-                             <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 ring-1 ring-black ring-opacity-5 hidden z-10" data-dropdown-menu>
+                            <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 ring-1 ring-black ring-opacity-5 hidden z-10" data-dropdown-menu>
                                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">Clientes</a>
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">Empleados</a>
+                                <a href="empleados.html" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">Empleados</a>
                             </div>
                         </div>
-                        <a href="#" class="text-gray-600 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300">Ganancias</a>
-                        <a href="#" class="text-gray-600 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300">Cuenta</a>
-                        <button id="theme-toggle" class="text-gray-600 hover:text-blue-600 dark:text-gray-300 ml-3 p-2 rounded-full">
+                        <a href="#" class="text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300 dark:hover:text-white">Ganancias</a>
+                        <a href="#" class="text-gray-700 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300 dark:hover:text-white">Cuenta</a>
+                        <button id="theme-toggle" class="text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-500 ml-3 p-2 rounded-full">
                             <i class="bi bi-moon-stars-fill text-lg block dark:hidden"></i>
                             <i class="bi bi-sun-fill text-lg hidden dark:block"></i>
                         </button>
                     </div>
+                    <div class="flex items-center md:hidden">
+                        <button id="theme-toggle-mobile" class="text-gray-600 hover:text-blue-600 dark:text-gray-400 mr-2 p-2 rounded-full">
+                            <i class="bi bi-moon-stars-fill text-xl block dark:hidden"></i>
+                            <i class="bi bi-sun-fill text-xl hidden dark:block"></i>
+                        </button>
+                        <button type="button" id="mobile-menu-button" class="bg-gray-200 dark:bg-gray-700 inline-flex items-center justify-center p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-white hover:bg-blue-600 focus:outline-none">
+                            <span class="sr-only">Abrir menú</span>
+                            <i class="bi bi-list text-2xl"></i>
+                        </button>
+                    </div>
                 </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
             </div>
         </nav>
     </header>
 
-    <!-- Contenido de la página -->
-    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
-        <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
-                <i class="bi bi-collection-fill text-blue-600"></i>
-                Gestión de Planes Estándar
-            </h1>
-            <button id="add-plan-btn" class="w-full sm:w-auto bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700">
-                <i class="bi bi-plus-circle-fill mr-2"></i>
-                Agregar Nuevo Plan
-            </button>
-        </div>
-
-        <!-- Sección de Ordenamiento -->
-        <div class="mb-6 flex justify-end">
-            <div class="flex items-center space-x-2">
-                <label for="sort-select" class="text-sm font-medium text-gray-900 dark:text-gray-100">Ordenar por:</label>
-                <select id="sort-select" class="bg-white/80 dark:bg-gray-900/80 dark:text-white border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm p-2">
-                    <option value="recientes">Fecha: Más recientes</option>
-                    <option value="antiguos">Fecha: Más antiguos</option>
-                    <option value="nombre-asc">Nombre: A-Z</option>
-                    <option value="nombre-desc">Nombre: Z-A</option>
-                </select>
+    <div class="pt-24">
+        <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+                    <i class="bi bi-geo-alt-fill text-blue-600"></i>
+                    Gestión de Planes Turísticos
+                </h1>
+                <button id="addPlanBtn" class="w-full sm:w-auto bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition-transform transform hover:scale-105">
+                    <i class="bi bi-plus-circle-fill mr-2"></i>
+                    Agregar Nuevo Plan
+                </button>
             </div>
-        </div>
 
-        <div class="bg-white/60 backdrop-blur-xl rounded-2xl shadow-lg overflow-hidden ring-1 ring-black ring-opacity-5 dark:bg-gray-800/60 dark:ring-white/10">
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left">
-                    <thead class="text-xs text-gray-900 uppercase bg-white/40 dark:bg-gray-900/40 dark:text-gray-300">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">Imagen</th>
-                            <th scope="col" class="px-6 py-3">Nombre del Plan</th>
-                            <th scope="col" class="px-6 py-3">Descripción</th>
-                            <th scope="col" class="px-6 py-3">Descuento</th>
-                            <th scope="col" class="px-6 py-3 text-center">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="plan-table-body" class="text-gray-800 dark:text-gray-200">
-                        <tr class="border-b border-white/30 hover:bg-white/20 dark:border-gray-700/50 dark:hover:bg-white/10" data-fecha-creacion="2025-08-29" data-id="1">
-                            <td class="px-6 py-4">
-                                <img src="https://res.cloudinary.com/demo/image/upload/w_150,h_100,c_fill,g_auto/sample.jpg" alt="Imagen del plan" class="table-image">
-                            </td>
-                            <td class="px-6 py-4 font-medium whitespace-nowrap plan-name">Plan Volcanes</td>
-                            <td class="px-6 py-4 max-w-sm truncate plan-description">Visita a los volcanes más impresionantes del país.</td>
-                            <td class="px-6 py-4 plan-discount">15%</td>
-                            <td class="px-6 py-4 text-center">
-                                <button class="text-blue-500 hover:text-blue-700 edit-btn"><i class="bi bi-pencil-square text-lg"></i></button>
-                                <button class="text-red-500 hover:text-red-700 delete-btn"><i class="bi bi-trash-fill text-lg"></i></button>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-white/30 hover:bg-white/20 dark:border-gray-700/50 dark:hover:bg-white/10" data-fecha-creacion="2025-07-15" data-id="2">
-                            <td class="px-6 py-4">
-                                <img src="https://res.cloudinary.com/demo/image/upload/w_150,h_100,c_fill,g_auto/car_road.jpg" alt="Imagen del plan" class="table-image">
-                            </td>
-                            <td class="px-6 py-4 font-medium whitespace-nowrap plan-name">Aventura en la Playa</td>
-                            <td class="px-6 py-4 max-w-sm truncate plan-description">Recorre las mejores playas de la costa.</td>
-                            <td class="px-6 py-4 plan-discount">10%</td>
-                            <td class="px-6 py-4 text-center">
-                                <button class="text-blue-500 hover:text-blue-700 edit-btn"><i class="bi bi-pencil-square text-lg"></i></button>
-                                <button class="text-red-500 hover:text-red-700 delete-btn"><i class="bi bi-trash-fill text-lg"></i></button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                <div class="w-full md-w-1/2 flex gap-2">
+                    <input type="text" id="searchInput" placeholder="Buscar plan..." class="p-3 w-full rounded-lg shadow-sm bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500">
+                    <select id="searchType" class="p-3 rounded-lg shadow-sm bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="nombre">Nombre</option>
+                        <option value="ubicacion">Ubicación</option>
+                        <option value="tipo">Tipo</option>
+                        <option value="descripcion">Descripción</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <label for="pageSize" class="text-gray-700 dark:text-gray-300">Tamaño:</label>
+                    <select id="pageSize" class="p-2 rounded-lg shadow-sm bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
             </div>
-        </div>
-    </main>
 
-    <!-- Modal para Añadir/Editar Plan Estándar -->
-    <div id="planModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 hidden modal-transition opacity-0">
-        <div id="modal-content" class="bg-white/70 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-md p-6 ring-1 ring-black ring-opacity-5 dark:bg-gray-800/70 dark:ring-white/10">
-            <div class="flex justify-between items-center pb-3 border-b border-gray-300 dark:border-gray-600">
-                <h3 id="modal-title" class="text-2xl font-semibold text-gray-800 dark:text-white">Nuevo Plan Estándar</h3>
-                <button id="close-modal-btn" class="text-gray-500"><i class="bi bi-x-lg text-2xl"></i></button>
+            <div class="bg-white/60 backdrop-blur-xl rounded-2xl shadow-lg overflow-hidden ring-1 ring-black ring-opacity-5 dark:bg-gray-800/60 dark:ring-white/10">
+                <div class="overflow-x-auto">
+                    <table id="plansTable" class="w-full text-sm text-left">
+                        <thead class="text-xs text-gray-800 uppercase bg-gray-50/40 dark:bg-gray-900/40 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">ID</th>
+                                <th scope="col" class="px-6 py-3">Nombre</th>
+                                <th scope="col" class="px-6 py-3">Ubicación</th>
+                                <th scope="col" class="px-6 py-3">Tipo</th>
+                                <th scope="col" class="px-6 py-3">Descripción</th>
+                                <th scope="col" class="px-6 py-3 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="plan-table-body" class="divide-y divide-gray-200 dark:divide-gray-700">
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <form id="plan-form" class="mt-6 space-y-4" novalidate>
-                <input type="hidden" id="planId" name="planId">
-                <div>
-                    <label for="nombre" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre del Plan</label>
-                    <input type="text" name="nombre" id="nombre" class="p-3 mt-1 block w-full bg-white/50 dark:bg-gray-700/50 rounded-lg dark:text-white dark:placeholder-gray-400 border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <div class="error-message text-red-500 text-xs mt-1 hidden"></div>
+
+            <nav class="flex justify-center mt-6">
+                <ul id="pagination" class="pagination flex items-center gap-1">
+                </ul>
+            </nav>
+        </main>
+    </div>
+
+    <div class="modal fade" id="planModal" tabindex="-1" aria-labelledby="planModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-white/70 backdrop-blur-xl rounded-2xl shadow-2xl w-full p-6 ring-1 ring-black ring-opacity-5 dark:bg-gray-800/70 dark:ring-white/10">
+                <div class="modal-header flex justify-between items-center pb-3 border-b border-gray-300 dark:border-gray-600">
+                    <h5 class="modal-title text-2xl font-semibold text-gray-900 dark:text-white" id="planModalLabel">Nuevo Plan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div>
-                    <label for="descripcion" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descripción</label>
-                    <textarea name="descripcion" id="descripcion" rows="3" class="p-3 mt-1 block w-full bg-white/50 dark:bg-gray-700/50 rounded-lg dark:text-white dark:placeholder-gray-400 border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                    <div class="error-message text-red-500 text-xs mt-1 hidden"></div>
-                </div>
-                <div>
-                    <label for="descuento" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Porcentaje de Descuento (Opcional)</label>
-                    <input type="number" name="descuento" id="descuento" class="p-3 mt-1 block w-full bg-white/50 dark:bg-gray-700/50 rounded-lg dark:text-white dark:placeholder-gray-400 border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <div class="error-message text-red-500 text-xs mt-1 hidden"></div>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Imagen del Plan</label>
-                    <input type="hidden" id="imagen_url" name="imagen_url">
-                    <button type="button" id="upload_widget" class="mt-2 w-full bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500">
-                        <i class="bi bi-cloud-arrow-up-fill mr-2"></i>Subir Imagen
-                    </button>
-                    <div id="image-preview-container" class="mt-4 hidden">
-                         <img id="image-preview" src="" alt="Vista previa de la imagen" class="max-h-40 mx-auto rounded-lg">
+                <form id="planForm" class="mt-6 space-y-5">
+                    <input type="hidden" id="planId" name="planId">
+                    
+                    <div>
+                        <label for="nombreLugar" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre del Lugar</label>
+                        <input type="text" name="nombreLugar" id="nombreLugar" placeholder="Ej: Lago de Coatepeque" class="p-3 mt-1 block w-full bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required maxlength="100">
                     </div>
-                     <div class="error-message text-red-500 text-xs mt-1 hidden"></div>
+
+                    <div>
+                        <label for="ubicacion" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ubicación</label>
+                        <input type="text" name="ubicacion" id="ubicacion" placeholder="Ej: Santa Ana, El Salvador" class="p-3 mt-1 block w-full bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required maxlength="150">
+                    </div>
+                    
+                    <div>
+                        <label for="tipoLugar" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo de Lugar</label>
+                        <input type="text" name="tipoLugar" id="tipoLugar" placeholder="Ej: Lago, Montaña, Playa" class="p-3 mt-1 block w-full bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required maxlength="50">
+                    </div>
+                    
+                    <div>
+                        <label for="descripcion" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Descripción</label>
+                        <textarea name="descripcion" id="descripcion" placeholder="Breve descripción del lugar turístico..." rows="3" class="p-3 mt-1 block w-full bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required maxlength="500"></textarea>
+                    </div>
+                    
+                </form>
+                <div class="modal-footer flex justify-end items-center pt-4 mt-6 border-t border-gray-300 dark:border-gray-600 space-x-3">
+                    <button id="cancel-btn" type="button" class="btn bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500" data-bs-dismiss="modal">
+                        Cancelar</button>
+                    <button type="submit" form="planForm" class="btn bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Guardar</button>
                 </div>
-            </form>
-            <div class="flex justify-end items-center pt-4 mt-6 border-t border-gray-300 dark:border-gray-600 space-x-3">
-                <button id="cancel-btn" type="button" class="bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">Cancelar</button>
-                <button type="submit" form="plan-form" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700">Guardar</button>
             </div>
         </div>
     </div>
-
-    <!-- Scripts -->
-    <script src="JS/planestandar.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="JS/Controllers/planController.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
 
