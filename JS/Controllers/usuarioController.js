@@ -45,6 +45,7 @@ document.querySelectorAll('[data-collapse-button]').forEach(button => {
         collapseContent.classList.toggle('hidden');
     });
 });
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 import {
     getUsuarios,
@@ -81,11 +82,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("searchInput");
     const searchType = document.getElementById("searchType");
     
-    //Campos para el manejo de imágenes
-    const imageFileInput = document.getElementById("userImageFileInput");
-    const imageUrlHidden = document.getElementById("userImageUrl");
-    const imagePreview = document.getElementById("userImagePreview");
-    
     // Lógica para añadir y quitar el atributo 'inert'
     modalElement.addEventListener('show.bs.modal', function() {
         if (mainContent) mainContent.setAttribute('inert', '');
@@ -96,24 +92,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (mainContent) mainContent.removeAttribute('inert');
         if (headerContent) headerContent.removeAttribute('inert');
     });
-
-    // Evento para previsualizar la imagen seleccionada
-    if (imageFileInput && imagePreview) {
-        imageFileInput.addEventListener("change", () => {
-            const file = imageFileInput.files?.[0];
-            const fileNameDisplay = document.getElementById("file-name-display");
-            
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = () => (imagePreview.src = reader.result);
-                reader.readAsDataURL(file);
-                if (fileNameDisplay) fileNameDisplay.textContent = file.name;
-            } else {
-                imagePreview.src = imageUrlHidden?.value || "https://placehold.co/150x150/EFEFEF/white?text=User";
-                if (fileNameDisplay) fileNameDisplay.textContent = "Ningún archivo seleccionado";
-            }
-        });
-    }
 
     // Evento que cambia la cantidad de registros por página
     const sizeSelector = document.getElementById("pageSize");
@@ -168,13 +146,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (passwordInput.value.trim() !== '') {
                 formData.append("password", passwordInput.value);
             }
-            
-            const file = imageFileInput?.files?.[0];
-            if (file) {
-                formData.append("image", file);
-            } else if (imageUrlHidden?.value) {
-                formData.append("Foto_Url", imageUrlHidden.value);
-            }
 
             try {
                 if (id) {
@@ -200,7 +171,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Función para cargar usuarios con paginación y búsqueda
     async function cargarUsuarios() {
         try {
-            // Unificada la lógica de listado y búsqueda en una sola llamada a getUsuarios
             const data = await getUsuarios(currentPage, currentSize, 'nombreUsuario,asc', currentSearchTerm, currentSearchType);
             
             const items = data.content || [];
@@ -210,60 +180,45 @@ document.addEventListener("DOMContentLoaded", () => {
             renderPagination(data.number, data.totalPages);
 
             if (items.length === 0) {
-                 tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-500 dark:text-gray-400">No se encontraron usuarios.</td></tr>`;
-                 return;
+                tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-500 dark:text-gray-400">No se encontraron usuarios.</td></tr>`;
+                return;
             }
 
             items.forEach((item) => {
-                // Verificación de integridad del objeto
                 if (!item || item.idUsuario === undefined) {
                     console.error("Error: el objeto de usuario está incompleto o no tiene ID", item);
-                    return; // Ignora el elemento si está incompleto
+                    return;
                 }
                 
                 const tr = document.createElement("tr");
                 tr.className = "hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors";
 
-                // Celda de ID
                 const tdId = document.createElement("td");
                 tdId.className = "px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white";
                 tdId.textContent = item.idUsuario;
                 tr.appendChild(tdId);
 
-                // Celda de Imagen
-                const tdImg = document.createElement("td");
-                tdImg.className = "px-6 py-4";
-                const img = document.createElement("img");
-                img.className = "w-10 h-10 rounded-full";
-                img.alt = "Foto de usuario";
-                img.src = item.fotUrl || "https://placehold.co/40x40/EFEFEF/white?text=User";
-                tdImg.appendChild(img);
-                tr.appendChild(tdImg);
-
-                // Celda de Nombre
                 const tdNombre = document.createElement("td");
                 tdNombre.className = "px-6 py-4";
                 tdNombre.textContent = item.nombreUsuario;
                 tr.appendChild(tdNombre);
 
-                // Celda de Rol
                 const tdRol = document.createElement("td");
                 tdRol.className = "px-6 py-4";
                 tdRol.textContent = item.rol;
                 tr.appendChild(tdRol);
 
-                // Celda de Email
                 const tdEmail = document.createElement("td");
                 tdEmail.className = "px-6 py-4";
                 tdEmail.textContent = item.correo;
                 tr.appendChild(tdEmail);
 
-                // Celda de Acciones
                 const tdBtns = document.createElement("td");
                 tdBtns.className = "px-6 py-4 text-center space-x-2";
                 
                 // Botón de Editar
                 const btnEdit = document.createElement("button");
+                // **CORRECCIÓN: Se aplican las clases de estilo de Tailwind**
                 btnEdit.className = "bg-yellow-100 text-yellow-800 p-2 rounded-full hover:bg-yellow-200 dark:bg-yellow-900 dark:text-yellow-300 dark:hover:bg-yellow-800 transition-colors";
                 btnEdit.title = "Editar";
                 btnEdit.innerHTML = `<i class="bi bi-pencil-square text-lg"></i>`;
@@ -272,6 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // Botón de Eliminar
                 const btnDel = document.createElement("button");
+                // **CORRECCIÓN: Se aplican las clases de estilo de Tailwind**
                 btnDel.className = "bg-red-100 text-red-800 p-2 rounded-full hover:bg-red-200 dark:bg-red-900 dark:text-red-300 dark:hover:bg-red-800 transition-colors";
                 btnDel.title = "Eliminar";
                 btnDel.innerHTML = `<i class="bi bi-trash-fill text-lg"></i>`;
@@ -305,29 +261,20 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         } catch (err) {
             console.error("Error cargando usuarios:", err);
-            if (tableBody) tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-500 dark:text-gray-400">Error al cargar los datos.</td></tr>`;
+            if (tableBody) tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-500 dark:text-gray-400">Error al cargar los datos.</td></tr>`;
         }
     }
 
     // Función para rellenar formulario al editar
     function setFormulario(item) {
         if (form) {
-            // Asegúrate de que las propiedades del objeto existen
             userIdInput.value = item.idUsuario || '';
             userNameInput.value = item.nombreUsuario || '';
             userEmailInput.value = item.correo || '';
             userRoleInput.value = item.rol || '';
             
-            // El campo password no se debe rellenar por seguridad
             passwordInput.value = '';
-            // El campo de contraseña no es obligatorio al editar
             passwordInput.removeAttribute('required');
-
-            if (imageUrlHidden) imageUrlHidden.value = item.fotUrl || "";
-            if (imagePreview) imagePreview.src = item.fotUrl || "https://placehold.co/150x150/EFEFEF/white?text=User";
-            if (imageFileInput) imageFileInput.value = "";
-            const fileNameDisplay = document.getElementById("file-name-display");
-            if (fileNameDisplay) fileNameDisplay.textContent = item.fotUrl ? "Archivo actual" : "Ningún archivo seleccionado";
         }
         modalLabel.textContent = "Editar usuario";
         userModal.show();
@@ -339,13 +286,6 @@ document.addEventListener("DOMContentLoaded", () => {
             form.reset();
             userIdInput.value = "";
             
-            if (imageUrlHidden) imageUrlHidden.value = "";
-            if (imagePreview) imagePreview.src = "https://placehold.co/150x150/EFEFEF/white?text=User";
-            if (imageFileInput) imageFileInput.value = "";
-            const fileNameDisplay = document.getElementById("file-name-display");
-            if (fileNameDisplay) fileNameDisplay.textContent = "Ningún archivo seleccionado";
-            
-            // El campo de contraseña es obligatorio al crear
             if (passwordInput) passwordInput.setAttribute('required', 'required');
         }
     }
@@ -356,7 +296,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!pagination) return;
         pagination.innerHTML = "";
         
-        // Botón Anterior
         const prev = document.createElement("li");
         prev.className = `inline-flex items-center justify-center h-10 px-4 transition-colors ${current === 0 ? "text-gray-400 pointer-events-none" : "text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700"}`;
         const prevLink = document.createElement("a");
@@ -373,7 +312,6 @@ document.addEventListener("DOMContentLoaded", () => {
         prev.appendChild(prevLink);
         pagination.appendChild(prev);
 
-        // Páginas
         for (let i = 0; i < totalPages; i++) {
             const li = document.createElement("li");
             li.className = `inline-flex items-center justify-center h-10 w-10 text-sm font-semibold transition-colors rounded-full ${i === current ? "bg-blue-600 text-white" : "text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700"}`;
@@ -390,7 +328,6 @@ document.addEventListener("DOMContentLoaded", () => {
             pagination.appendChild(li);
         }
 
-        // Botón Siguiente
         const next = document.createElement("li");
         next.className = `inline-flex items-center justify-center h-10 px-4 transition-colors ${current >= totalPages - 1 ? "text-gray-400 pointer-events-none" : "text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700"}`;
         const nextLink = document.createElement("a");
