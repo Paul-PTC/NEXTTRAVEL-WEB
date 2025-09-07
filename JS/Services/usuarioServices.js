@@ -57,3 +57,4 @@ export const eliminarUsuario = async (id) => {
     }
     throw new Error('Error desconocido al eliminar el usuario.');
 };
+          
