@@ -51,7 +51,7 @@ export async function InsertarVehiculos(data){
 
 export async function ActualizarVehiculo(id, data){
     try{
-        const res = await fetch(`${API_URL}/actualizar/${id}`,{
+        const res = await fetch(`${API_URL}/vehiculos/${id}`,{
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(data),

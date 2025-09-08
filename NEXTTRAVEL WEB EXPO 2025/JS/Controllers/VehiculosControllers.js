@@ -3,7 +3,8 @@ import{
     InsertarVehiculos,
     ActualizarVehiculo,
     BorrarVehiculo,
-    ObtenerVehiculosPorID
+    ObtenerVehiculosPorID,
+    BuscarPorPlaca
 }from '../Services/VehiculoService.js';
 
 //------- 2. Variables de la Paginacion----------
@@ -50,8 +51,8 @@ document.addEventListener("DOMContentLoaded", () => {
             placa: form.Placa.value.trim(),
             modelo: form.Modelo.value.trim(),
             capacidad: Number(form.Capacidad.value),
-            AnioFabricacion: form.anio.value,
-            estado: form.Estado.value,
+            anioFabricacion: form.anio.value,
+            estado: form.estadovehiculo.value,
         };
         //-------- Crear o Actualizar Producto--------
         try{
@@ -64,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
             await CargarVehiculos(); //Refrescar Tabla
         }catch(err){
             console.error("Error Guardando:" , err);
-            alert("Ocurrio un errro al guardar el producto");
+            alert("Ocurrio un error al Crear un nuevo Apartado para Vehiculo");
         }
     });
 
@@ -132,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
                 btnDel.addEventListener("click", () => {
                     if(confirm("¿Desea Eliminar este Vehiculo?")){
-                        EliminarVehiculo(item.id);
+                        EliminarVehiculo(item.idVehiculo);
                     }
                 });
                 tdBtns.appendChild(btnDel);
@@ -146,14 +147,15 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Error Cargando Productos:", err);
         }
     }
+
     //para restablecer el Formulario
     function setFromulario(item){
         form.IdVehiculo.value = item.idVehiculo;
         form.Placa.value = item.placa;
         form.Modelo.value = item.modelo;
         form.Capacidad.value = item.capacidad;
-        form.anio.value = item.anio;
-        form.Estado.value = item.estado;
+        form.anio.value = item.anioFabricacion;
+        form.estadovehiculo.value = item.estado;
 
         ModalLabel.textContent = "Editar Producto";
         modal.show();
