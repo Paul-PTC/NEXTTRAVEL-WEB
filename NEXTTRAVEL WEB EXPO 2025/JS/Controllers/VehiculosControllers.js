@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function EliminarVehiculo(id){
         try{
             await BorrarVehiculo(id);
-            await ObtenerVehiculos();
+            await CargarVehiculos();
         }catch(error){
             console.error("Error a la hora de Eliminar:", error);
         } 

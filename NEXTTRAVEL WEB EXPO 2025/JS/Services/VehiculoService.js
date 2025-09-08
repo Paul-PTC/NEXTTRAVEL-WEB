@@ -66,7 +66,7 @@ export async function ActualizarVehiculo(id, data){
 
 export async function BorrarVehiculo(id){
     try{
-        const res = await fetch(`${API_URL}/eliminar/${id}`, {method: 'DELETE'});
+        const res = await fetch(`${API_URL}/vehiculos/${id}`, {method: 'DELETE'});
         if(!res.ok)throw new Error(`Error a la hora de Borrar vehiculo: ${res.status}`)
     }catch(err){
         console.error(`Error en la Hora de Eliminar: ${err}`);
