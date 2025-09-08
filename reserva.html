@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Reservas - NEXT TRAVEL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .action-btn {
+            width: 2.5rem; height: 2.5rem;
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+    </style>
+</head>
+<body class="antialiased bg-gray-50 dark:bg-gray-900">
+    <header>
+        <!-- Aquí va tu barra de navegación -->
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
+                <i class="bi bi-calendar2-check-fill text-blue-600"></i>
+                Gestión de Reservas
+            </h1>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+            <div class="w-full md:w-1/2 flex gap-2">
+                <input type="text" id="searchInput" placeholder="Buscar..." class="p-3 w-full rounded-lg shadow-sm bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500">
+                <select id="searchType" class="p-3 rounded-lg shadow-sm bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="cliente">Nombre Cliente</option>
+                    <option value="dui">DUI</option>
+                    <option value="lugar">Lugar</option>
+                    <option value="estado">Estado</option>
+                </select>
+            </div>
+            <div class="flex items-center gap-2">
+                <label for="pageSize" class="text-gray-700 dark:text-gray-300">Mostrar:</label>
+                <select id="pageSize" class="p-3 rounded-lg shadow-sm bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="bg-white/60 backdrop-blur-xl rounded-2xl shadow-lg overflow-hidden ring-1 ring-black ring-opacity-5 dark:bg-gray-800/60 dark:ring-white/10">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                    <thead class="text-xs text-gray-900 uppercase bg-white/40 dark:bg-gray-900/40 dark:text-gray-300">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">ID Reserva</th>
+                            <th scope="col" class="px-6 py-3">Cliente</th>
+                            <th scope="col" class="px-6 py-3">Lugar</th>
+                            <th scope="col" class="px-6 py-3">Fecha</th>
+                            <th scope="col" class="px-6 py-3">Personas</th>
+                            <th scope="col" class="px-6 py-3">Estado</th>
+                            <th scope="col" class="px-6 py-3 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reservas-table-body" class="text-gray-800 dark:text-gray-200">
+                        <!-- Las filas se insertarán aquí dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <nav class="flex justify-center mt-6">
+            <ul id="pagination" class="pagination flex items-center gap-1"></ul>
+        </nav>
+    </main>
+
+    <!-- Modal para Editar Estado de la Reserva -->
+    <div class="modal fade" id="estadoModal" tabindex="-1" aria-labelledby="estadoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-white/70 backdrop-blur-xl rounded-2xl shadow-2xl p-6 ring-1 ring-black ring-opacity-5 dark:bg-gray-800/70 dark:ring-white/10">
+                <div class="modal-header flex justify-between items-center pb-3 border-b border-gray-300 dark:border-gray-600">
+                    <h5 class="modal-title text-2xl font-semibold text-gray-800 dark:text-white" id="estadoModalLabel">Cambiar Estado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+                </div>
+                <div class="modal-body mt-6">
+                    <form id="estadoForm" class="space-y-5">
+                        <input type="hidden" id="reservaIdHidden">
+                        <div>
+                            <label for="estadoSelect" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nuevo Estado</label>
+                            <select id="estadoSelect" class="p-3 mt-1 block w-full bg-white/50 dark:bg-gray-700/50 border-gray-300 dark:border-gray-600 rounded-lg shadow-sm">
+                                <!-- Opciones de estado se cargarán aquí -->
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer flex justify-end items-center pt-4 mt-6 border-t border-gray-300 dark:border-gray-600 space-x-3">
+                    <button type="button" class="btn bg-gray-200" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="estadoForm" class="btn bg-blue-600 text-white">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/reservasService.js" type="module"></script>
+    <script src="js/reservasController.js" type="module"></script>
+</body>
+</html>
+
