@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Gastos - Next Travel</title>
+    <title>Gestión de Paquetes - Next Travel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -49,6 +49,18 @@
         .animate-fade-in-up {
             animation: fadeInUp 0.5s ease-out forwards;
         }
+        /* Estilo para el input de archivo personalizado */
+        .file-input-label {
+            cursor: pointer;
+            border: 2px dashed #778da9;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            transition: all 0.2s ease-in-out;
+        }
+        .file-input-label:hover {
+            border-color: #415a77;
+            background-color: rgba(119, 141, 169, 0.05);
+        }
     </style>
     <script>
         // Configuración de Tailwind para usar los nuevos colores
@@ -79,13 +91,9 @@
                 <h1 class="text-xl font-bold text-oxford-blue dark:text-silver-lake-blue">Next Travel</h1>
             </div>
             <nav class="flex-1 px-4 py-6 space-y-2">
-                 <a href="paquetes.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
+                 <a href="paquetes.html" class="group flex items-center space-x-3 px-4 py-2 bg-silver-lake-blue/20 dark:bg-yinmn-blue/30 text-oxford-blue dark:text-platinum font-semibold rounded-lg">
                     <i data-lucide="package" class="sidebar-icon"></i>
                     <span>Paquetes</span>
-                </a>
-                <a href="reserva.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
-                    <i data-lucide="calendar-check" class="sidebar-icon"></i>
-                    <span>Reservas</span>
                 </a>
                 <a href="clientes.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
                     <i data-lucide="user-check" class="sidebar-icon"></i>
@@ -95,26 +103,21 @@
                     <i data-lucide="users" class="sidebar-icon"></i>
                     <span>Empleados</span>
                 </a>
-                <a href="usuario.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
-                    <i data-lucide="user-cog" class="sidebar-icon"></i>
-                    <span>Usuarios</span>
-                </a>
-                <a href="vehiculos.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
-                    <i data-lucide="car" class="sidebar-icon"></i>
-                    <span>Vehículos</span>
-                </a>
-                <a href="Mantenimiento.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
-                    <i data-lucide="wrench" class="sidebar-icon"></i>
-                    <span>Mantenimiento</span>
-                </a>
-                <hr class="my-2 border-platinum dark:border-rich-black/50">
-                <a href="Gasto.html" class="group flex items-center space-x-3 px-4 py-2 bg-silver-lake-blue/20 dark:bg-yinmn-blue/30 text-oxford-blue dark:text-platinum font-semibold rounded-lg">
-                    <i data-lucide="receipt-text" class="sidebar-icon"></i>
-                    <span>Gastos</span>
+                <a href="reserva.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
+                    <i data-lucide="calendar-check" class="sidebar-icon"></i>
+                    <span>Reservas</span>
                 </a>
                 <a href="ganancia.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
                     <i data-lucide="trending-up" class="sidebar-icon"></i>
                     <span>Ganancias</span>
+                </a>
+                 <a href="Gasto.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
+                    <i data-lucide="receipt-text" class="sidebar-icon"></i>
+                    <span>Gastos</span>
+                </a>
+                <a href="Mantenimiento.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
+                    <i data-lucide="wrench" class="sidebar-icon"></i>
+                    <span>Mantenimiento</span>
                 </a>
             </nav>
             <div class="p-4 border-t border-platinum dark:border-rich-black">
@@ -135,7 +138,7 @@
                     </button>
                     <div class="relative w-full max-w-md">
                         <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-silver-lake-blue w-5 h-5"></i>
-                        <input type="text" id="searchInput" placeholder="Buscar por descripción, tipo..." class="w-full pl-10 pr-4 py-2 bg-platinum/60 dark:bg-rich-black/40 border border-silver-lake-blue/50 dark:border-yinmn-blue rounded-lg focus:outline-none focus:ring-2 focus:ring-yinmn-blue text-sm">
+                        <input type="text" id="searchInput" placeholder="Buscar por nombre de paquete, destino..." class="w-full pl-10 pr-4 py-2 bg-platinum/60 dark:bg-rich-black/40 border border-silver-lake-blue/50 dark:border-yinmn-blue rounded-lg focus:outline-none focus:ring-2 focus:ring-yinmn-blue text-sm">
                     </div>
                 </div>
                 <div class="flex items-center space-x-4 sm:space-x-6">
@@ -157,164 +160,166 @@
                 </div>
             </header>
 
-            <!-- Contenido del Dashboard de Gastos -->
+            <!-- Contenido del Dashboard de Paquetes -->
             <div class="p-6 md:p-8">
                 <div class="flex flex-col sm:flex-row justify-between items-start mb-8">
                     <div>
-                        <h2 class="text-3xl font-bold dark:text-white animate-fade-in-up">Registro de Gastos</h2>
-                        <p class="text-yinmn-blue dark:text-silver-lake-blue mt-1 animate-fade-in-up" style="animation-delay: 100ms;">Controla y categoriza las salidas de dinero.</p>
+                        <h2 class="text-3xl font-bold dark:text-white animate-fade-in-up">Paquetes Turísticos</h2>
+                        <p class="text-yinmn-blue dark:text-silver-lake-blue mt-1 animate-fade-in-up" style="animation-delay: 100ms;">Crea y administra los planes de viaje ofrecidos.</p>
                     </div>
-                     <button id="btnAddGasto" class="w-full sm:w-auto mt-4 sm:mt-0 bg-yinmn-blue text-white font-semibold py-2 px-5 rounded-lg shadow-md hover:bg-oxford-blue focus:outline-none focus:ring-2 focus:ring-yinmn-blue focus:ring-opacity-75 transition-all transform hover:scale-105 animate-fade-in-up" style="animation-delay: 200ms;">
+                     <button id="addPackageBtn" class="w-full sm:w-auto mt-4 sm:mt-0 bg-yinmn-blue text-white font-semibold py-2 px-5 rounded-lg shadow-md hover:bg-oxford-blue focus:outline-none focus:ring-2 focus:ring-yinmn-blue focus:ring-opacity-75 transition-all transform hover:scale-105 animate-fade-in-up" style="animation-delay: 200ms;">
                         <i data-lucide="plus-circle" class="inline-block w-5 h-5 mr-2 -mt-0.5"></i>
-                        Registrar Gasto
+                        Nuevo Paquete
                     </button>
                 </div>
                 
                 <!-- Tarjetas de métricas -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div class="bg-white dark:bg-oxford-blue p-6 rounded-xl shadow-sm flex items-center space-x-4 animate-fade-in-up" style="animation-delay: 300ms;">
-                        <div class="bg-rose-100 dark:bg-rose-900/50 text-rose-600 dark:text-rose-400 p-3 rounded-lg"><i data-lucide="trending-down" class="w-6 h-6"></i></div>
+                        <div class="bg-sky-100 dark:bg-sky-900/50 text-sky-600 dark:text-sky-400 p-3 rounded-lg"><i data-lucide="package-check" class="w-6 h-6"></i></div>
                         <div>
-                            <p class="text-yinmn-blue dark:text-silver-lake-blue text-sm">Gasto Total (Mes)</p>
-                            <p class="text-2xl font-bold dark:text-white">$2,379.75</p>
+                            <p class="text-yinmn-blue dark:text-silver-lake-blue text-sm">Paquetes Activos</p>
+                            <p class="text-2xl font-bold dark:text-white">25</p>
                         </div>
                     </div>
                     <div class="bg-white dark:bg-oxford-blue p-6 rounded-xl shadow-sm flex items-center space-x-4 animate-fade-in-up" style="animation-delay: 400ms;">
-                        <div class="bg-sky-100 dark:bg-sky-900/50 text-sky-600 dark:text-sky-400 p-3 rounded-lg"><i data-lucide="wallet-cards" class="w-6 h-6"></i></div>
+                        <div class="bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 p-3 rounded-lg"><i data-lucide="map-pin" class="w-6 h-6"></i></div>
                         <div>
-                            <p class="text-yinmn-blue dark:text-silver-lake-blue text-sm">Transacciones (Mes)</p>
-                            <p class="text-2xl font-bold dark:text-white">58</p>
+                            <p class="text-yinmn-blue dark:text-silver-lake-blue text-sm">Destinos Populares</p>
+                            <p class="text-2xl font-bold dark:text-white">8</p>
                         </div>
                     </div>
                      <div class="bg-white dark:bg-oxford-blue p-6 rounded-xl shadow-sm flex items-center space-x-4 animate-fade-in-up" style="animation-delay: 500ms;">
-                        <div class="bg-violet-100 dark:bg-violet-900/50 text-violet-600 dark:text-violet-400 p-3 rounded-lg"><i data-lucide="scale" class="w-6 h-6"></i></div>
+                        <div class="bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 p-3 rounded-lg"><i data-lucide="calendar-check" class="w-6 h-6"></i></div>
                         <div>
-                            <p class="text-yinmn-blue dark:text-silver-lake-blue text-sm">Gasto Promedio</p>
-                            <p class="text-2xl font-bold dark:text-white">$41.03</p>
+                            <p class="text-yinmn-blue dark:text-silver-lake-blue text-sm">Reservas (Mes)</p>
+                            <p class="text-2xl font-bold dark:text-white">72</p>
                         </div>
                     </div>
                     <div class="bg-white dark:bg-oxford-blue p-6 rounded-xl shadow-sm flex items-center space-x-4 animate-fade-in-up" style="animation-delay: 600ms;">
-                        <div class="bg-stone-100 dark:bg-stone-900/50 text-stone-600 dark:text-stone-400 p-3 rounded-lg"><i data-lucide="tags" class="w-6 h-6"></i></div>
+                        <div class="bg-violet-100 dark:bg-violet-900/50 text-violet-600 dark:text-violet-400 p-3 rounded-lg"><i data-lucide="dollar-sign" class="w-6 h-6"></i></div>
                         <div>
-                            <p class="text-yinmn-blue dark:text-silver-lake-blue text-sm">Categorías de Gasto</p>
-                            <p class="text-2xl font-bold dark:text-white">8</p>
+                            <p class="text-yinmn-blue dark:text-silver-lake-blue text-sm">Ingreso Promedio</p>
+                            <p class="text-2xl font-bold dark:text-white">$350</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Tabla de Gastos -->
+                <!-- Tabla de Paquetes -->
                 <div class="bg-white dark:bg-oxford-blue p-4 sm:p-6 rounded-xl shadow-sm animate-fade-in-up" style="animation-delay: 700ms;">
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm" id="gastosTable">
+                        <table class="w-full text-left text-sm" id="paquetesTable">
                             <thead class="text-xs text-yinmn-blue dark:text-silver-lake-blue uppercase bg-platinum/60 dark:bg-rich-black/50">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3 rounded-l-lg">ID Gasto</th>
-                                    <th scope="col" class="px-6 py-3">Tipo de Gasto</th>
-                                    <th scope="col" class="px-6 py-3">Descripción</th>
-                                    <th scope="col" class="px-6 py-3">Monto</th>
-                                    <th scope="col" class="px-6 py-3">Fecha</th>
+                                    <th scope="col" class="px-6 py-3 rounded-l-lg">Paquete</th>
+                                    <th scope="col" class="px-6 py-3">Destino Principal</th>
+                                    <th scope="col" class="px-6 py-3">Duración</th>
+                                    <th scope="col" class="px-6 py-3">Precio</th>
+                                    <th scope="col" class="px-6 py-3">Estado</th>
                                     <th scope="col" class="px-6 py-3 text-center rounded-r-lg">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="tblBodyGasto" class="dark:text-platinum">
+                            <tbody id="package-table-body" class="dark:text-platinum">
                                 <!-- Filas se cargarán dinámicamente -->
                             </tbody>
                         </table>
                     </div>
                      <nav class="flex justify-between items-center mt-6">
-                        <div id="pageInfoGasto" class="text-xs sm:text-sm text-yinmn-blue dark:text-silver-lake-blue">
+                        <div id="pageInfo" class="text-xs sm:text-sm text-yinmn-blue dark:text-silver-lake-blue">
                            Mostrando 0–0 de 0
                         </div>
-                        <ul id="pagerGasto" class="pagination flex items-center gap-1"></ul>
+                        <ul id="pagination" class="pagination flex items-center gap-1"></ul>
                     </nav>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Modal para Agregar/Editar Gasto -->
-    <div id="gastoModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 opacity-0 scale-95 pointer-events-none transition-all duration-300">
-        <div id="gasto-modal-content" class="bg-white dark:bg-oxford-blue rounded-2xl shadow-2xl w-full max-w-md p-6 sm:p-8 transform transition-all duration-300">
+    <!-- Modal para Agregar/Editar Paquete -->
+    <div id="packageModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 opacity-0 scale-95 pointer-events-none transition-all duration-300">
+        <div class="bg-white dark:bg-oxford-blue rounded-2xl shadow-2xl w-full max-w-lg p-6 sm:p-8 transform transition-all duration-300">
             <div class="flex justify-between items-center pb-3 border-b border-platinum dark:border-rich-black">
-                <h3 id="gastoModalLabel" class="text-2xl font-semibold dark:text-white">Nuevo Gasto</h3>
-                <button id="gasto-close-btn" class="text-silver-lake-blue hover:text-rich-black dark:hover:text-platinum transition-colors">
-                    <i data-lucide="x" class="w-6 h-6"></i>
+                <h3 id="packageModalLabel" class="text-2xl font-semibold dark:text-white">Nuevo Paquete</h3>
+                <button id="closeModalBtn" class="text-silver-lake-blue hover:text-rich-black dark:hover:text-platinum transition-colors">
+                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
             </div>
-            <form id="gastoForm" class="mt-6 space-y-5">
-                <input type="hidden" id="idGasto" name="idGasto">
-                <div>
-                    <label for="idTipoGasto" class="block text-sm font-medium text-yinmn-blue dark:text-silver-lake-blue mb-1">Tipo de Gasto</label>
-                    <select id="idTipoGasto" name="idTipoGasto" class="p-3 mt-1 block w-full bg-platinum/60 dark:bg-rich-black/40 border-silver-lake-blue/50 dark:border-yinmn-blue rounded-lg shadow-sm focus:ring-yinmn-blue focus:border-yinmn-blue sm:text-sm" required>
-                       <option value="">Seleccione un tipo...</option>
-                       <!-- Se poblará con la API de tipos -->
-                    </select>
+            <form id="packageForm" class="mt-6 space-y-5">
+                <input type="hidden" id="idLugar" name="idLugar">
+                <input type="hidden" id="imagen_url_hidden" name="imagen_url_hidden">
+                 <div>
+                    <label for="nombreLugar" class="block text-sm font-medium text-yinmn-blue dark:text-silver-lake-blue mb-1">Nombre del Paquete (Lugar)</label>
+                    <input type="text" id="nombreLugar" name="nombreLugar" placeholder="Ej: Aventura Volcánica en Coatepeque" class="p-3 w-full bg-platinum/60 dark:bg-rich-black/40 border border-silver-lake-blue/50 dark:border-yinmn-blue rounded-lg focus:ring-yinmn-blue focus:border-yinmn-blue" required>
                 </div>
                 <div>
-                    <label for="monto" class="block text-sm font-medium text-yinmn-blue dark:text-silver-lake-blue mb-1">Monto ($)</label>
-                    <input type="number" id="monto" name="monto" min="0" step="0.01" placeholder="0.00" class="p-3 mt-1 block w-full bg-platinum/60 dark:bg-rich-black/40 border-silver-lake-blue/50 dark:border-yinmn-blue rounded-lg shadow-sm focus:ring-yinmn-blue focus:border-yinmn-blue sm:text-sm" required>
+                    <label for="ubicacion" class="block text-sm font-medium text-yinmn-blue dark:text-silver-lake-blue mb-1">Ubicación</label>
+                    <input type="text" id="ubicacion" name="ubicacion" placeholder="Ej: Santa Ana, El Salvador" class="p-3 w-full bg-platinum/60 dark:bg-rich-black/40 border border-silver-lake-blue/50 dark:border-yinmn-blue rounded-lg focus:ring-yinmn-blue focus:border-yinmn-blue" required>
+                </div>
+                <div>
+                    <label for="tipo" class="block text-sm font-medium text-yinmn-blue dark:text-silver-lake-blue mb-1">Tipo de Paquete</oabel>
+                    <input type="text" id="tipo" name="tipo" placeholder="Ej: Playa, Montaña, Aventura" class="p-3 w-full bg-platinum/60 dark:bg-rich-black/40 border border-silver-lake-blue/50 dark:border-yinmn-blue rounded-lg focus:ring-yinmn-blue focus:border-yinmn-blue" required>
                 </div>
                 <div>
                     <label for="descripcion" class="block text-sm font-medium text-yinmn-blue dark:text-silver-lake-blue mb-1">Descripción</label>
-                    <textarea id="descripcion" name="descripcion" rows="3" placeholder="Detalle del gasto (ej. Combustible para van)" class="p-3 mt-1 block w-full bg-platinum/60 dark:bg-rich-black/40 border-silver-lake-blue/50 dark:border-yinmn-blue rounded-lg shadow-sm focus:ring-yinmn-blue focus:border-yinmn-blue sm:text-sm"></textarea>
+                    <textarea id="descripcion" name="descripcion" rows="3" placeholder="Incluye detalles sobre el itinerario, actividades, etc." class="p-3 w-full bg-platinum/60 dark:bg-rich-black/40 border border-silver-lake-blue/50 dark:border-yinmn-blue rounded-lg focus:ring-yinmn-blue focus:border-yinmn-blue"></textarea>
+                </div>
+                 <div>
+                    <label for="imagen_url" class="block text-sm font-medium text-yinmn-blue dark:text-silver-lake-blue mb-1">URL de la Imagen</label>
+                    <input type="url" id="imagen_url" name="imagen_url" placeholder="https://example.com/imagen.jpg" class="p-3 w-full bg-platinum/60 dark:bg-rich-black/40 border border-silver-lake-blue/50 dark:border-yinmn-blue rounded-lg focus:ring-yinmn-blue focus:border-yinmn-blue">
                 </div>
             </form>
             <div class="flex justify-end items-center pt-4 mt-6 border-t border-platinum dark:border-rich-black space-x-3">
-                <button type="button" id="gasto-cancel-btn" class="bg-platinum text-rich-black font-semibold py-2 px-4 rounded-lg shadow-sm hover:bg-silver-lake-blue/50 focus:outline-none focus:ring-2 focus:ring-silver-lake-blue dark:bg-yinmn-blue dark:text-white dark:hover:bg-silver-lake-blue transition-colors">Cancelar</button>
-                <button type="submit" form="gastoForm" class="bg-yinmn-blue text-white font-semibold py-2 px-4 rounded-lg shadow-sm hover:bg-oxford-blue focus:outline-none focus:ring-2 focus:ring-yinmn-blue transition-colors">Guardar</button>
+                <button id="cancel-btn" type="button" class="bg-platinum text-rich-black font-semibold py-2 px-4 rounded-lg shadow-sm hover:bg-silver-lake-blue/50 focus:outline-none focus:ring-2 focus:ring-silver-lake-blue dark:bg-yinmn-blue dark:text-white dark:hover:bg-silver-lake-blue transition-colors">Cancelar</button>
+                <button type="submit" form="packageForm" class="bg-yinmn-blue text-white font-semibold py-2 px-4 rounded-lg shadow-sm hover:bg-oxford-blue focus:outline-none focus:ring-2 focus:ring-yinmn-blue transition-colors">Guardar Paquete</button>
             </div>
         </div>
     </div>
     
     <script>
-        // Lógica para el modo oscuro
-        (function () {
+        // Lógica del Modal y UI básica
+        (function() {
+            // Lógica para el modo oscuro
             const saved = localStorage.getItem('theme');
             const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches;
             const enableDark = saved ? saved === 'dark' : prefers;
             document.documentElement.classList.toggle('dark', enableDark);
-        })();
-        function toggleTheme() {
-            const root = document.documentElement;
-            const isDark = root.classList.toggle('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        }
-        document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
-        document.getElementById('mobile-menu-button')?.addEventListener('click', () => document.getElementById('mobile-menu')?.classList.toggle('hidden'));
 
-        // Lógica del Modal
-        const addGastoBtn = document.getElementById('btnAddGasto');
-        const gastoModal = document.getElementById('gastoModal');
-        const closeModalBtn = document.getElementById('gasto-close-btn');
-        const cancelBtn = document.getElementById('gasto-cancel-btn');
-        const modalContent = gastoModal.querySelector('div');
-
-        const openModal = () => {
-            gastoModal.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-            modalContent.classList.remove('scale-95');
-        };
-        const closeModal = () => {
-            modalContent.classList.add('scale-95');
-            gastoModal.classList.add('opacity-0');
-            setTimeout(() => {
-                gastoModal.classList.add('pointer-events-none');
-            }, 300);
-        };
-
-        addGastoBtn.addEventListener('click', openModal);
-        closeModalBtn.addEventListener('click', closeModal);
-        cancelBtn.addEventListener('click', closeModal);
-        
-        gastoModal.addEventListener('click', (event) => {
-            if (event.target === gastoModal) {
-                closeModal();
+            function toggleTheme() {
+                const root = document.documentElement;
+                const isDark = root.classList.toggle('dark');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
             }
-        });
+            document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
+            document.getElementById('mobile-menu-button')?.addEventListener('click', () => document.getElementById('mobile-menu')?.classList.toggle('hidden'));
 
-        // Renderizar iconos de Lucide
-        lucide.createIcons();
+            // Lógica del Modal
+            const addPackageBtn = document.getElementById("addPackageBtn");
+            const modal = document.getElementById("packageModal");
+            const content = modal.querySelector('div');
+            const closeModalBtn = document.getElementById("closeModalBtn");
+            const cancelBtn = document.getElementById("cancel-btn");
+
+            window.openPackageModal = () => {
+                modal.classList.remove("hidden", "opacity-0", "pointer-events-none");
+                content.classList.remove("scale-95");
+            };
+            window.closePackageModal = () => {
+                content.classList.add("scale-95");
+                modal.classList.add("opacity-0");
+                setTimeout(() => modal.classList.add("hidden", "pointer-events-none"), 300);
+            };
+
+            addPackageBtn?.addEventListener("click", window.openPackageModal);
+            closeModalBtn?.addEventListener("click", window.closePackageModal);
+            cancelBtn?.addEventListener("click", window.closePackageModal);
+            modal?.addEventListener("click", (e) => {
+                if (e.target === modal) window.closePackageModal();
+            });
+
+            lucide.createIcons();
+        })();
     </script>
-    <script src="JS/Controllers/gastoController.js" type="module"></script>
+    <script src="JS/Controllers/paquetesController.js" type="module"></script>
 </body>
 </html>
 
