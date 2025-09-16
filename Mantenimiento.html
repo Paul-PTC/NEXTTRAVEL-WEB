@@ -69,7 +69,8 @@
     </script>
 </head>
 <body class="bg-platinum text-rich-black dark:bg-rich-black dark:text-platinum">
-    <div class="flex h-screen">
+    <!-- Contenedor principal con z-index para controlar el apilamiento -->
+    <div class="flex h-screen relative z-10">
         <!-- Barra lateral de navegación -->
         <aside class="w-64 bg-white dark:bg-oxford-blue shadow-md flex-col transition-all duration-300 hidden md:flex">
             <div class="p-6 flex items-center space-x-3 border-b border-platinum dark:border-rich-black">
@@ -79,7 +80,7 @@
                 <h1 class="text-xl font-bold text-oxford-blue dark:text-silver-lake-blue">Next Travel</h1>
             </div>
             <nav class="flex-1 px-4 py-6 space-y-2">
-                 <a href="paquetes.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
+                <a href="paquetes.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
                     <i data-lucide="package" class="sidebar-icon"></i>
                     <span>Paquetes</span>
                 </a>
@@ -119,7 +120,7 @@
             </nav>
             <div class="p-4 border-t border-platinum dark:border-rich-black">
                 <a href="cuenta.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
-                     <i data-lucide="circle-user-round" class="sidebar-icon"></i>
+                    <i data-lucide="circle-user-round" class="sidebar-icon"></i>
                     <span>Cuenta</span>
                 </a>
             </div>
@@ -164,7 +165,7 @@
                         <h2 class="text-3xl font-bold dark:text-white animate-fade-in-up">Mantenimiento de Flota</h2>
                         <p class="text-yinmn-blue dark:text-silver-lake-blue mt-1 animate-fade-in-up" style="animation-delay: 100ms;">Registra y consulta el historial de mantenimiento de vehículos.</p>
                     </div>
-                     <button id="btnAddMant" class="w-full sm:w-auto mt-4 sm:mt-0 bg-yinmn-blue text-white font-semibold py-2 px-5 rounded-lg shadow-md hover:bg-oxford-blue focus:outline-none focus:ring-2 focus:ring-yinmn-blue focus:ring-opacity-75 transition-all transform hover:scale-105 animate-fade-in-up" style="animation-delay: 200ms;">
+                    <button id="btnAddMant" class="w-full sm:w-auto mt-4 sm:mt-0 bg-yinmn-blue text-white font-semibold py-2 px-5 rounded-lg shadow-md hover:bg-oxford-blue focus:outline-none focus:ring-2 focus:ring-yinmn-blue focus:ring-opacity-75 transition-all transform hover:scale-105 animate-fade-in-up" style="animation-delay: 200ms;">
                         <i data-lucide="plus-circle" class="inline-block w-5 h-5 mr-2 -mt-0.5"></i>
                         Nuevo Registro
                     </button>
@@ -186,7 +187,7 @@
                             <p class="text-2xl font-bold dark:text-white">2</p>
                         </div>
                     </div>
-                     <div class="bg-white dark:bg-oxford-blue p-6 rounded-xl shadow-sm flex items-center space-x-4 animate-fade-in-up" style="animation-delay: 500ms;">
+                    <div class="bg-white dark:bg-oxford-blue p-6 rounded-xl shadow-sm flex items-center space-x-4 animate-fade-in-up" style="animation-delay: 500ms;">
                         <div class="bg-rose-100 dark:bg-rose-900/50 text-rose-600 dark:text-rose-400 p-3 rounded-lg"><i data-lucide="dollar-sign" class="w-6 h-6"></i></div>
                         <div>
                             <p class="text-yinmn-blue dark:text-silver-lake-blue text-sm">Costo (Mes)</p>
@@ -221,7 +222,7 @@
                             </tbody>
                         </table>
                     </div>
-                     <nav class="flex justify-between items-center mt-6">
+                    <nav class="flex justify-between items-center mt-6">
                         <div id="pageInfoMant" class="text-xs sm:text-sm text-yinmn-blue dark:text-silver-lake-blue">
                            Mostrando 0–0 de 0
                         </div>
@@ -238,7 +239,7 @@
             <div class="flex justify-between items-center pb-3 border-b border-platinum dark:border-rich-black">
                 <h3 id="mantModalLabel" class="text-2xl font-semibold dark:text-white">Nuevo Mantenimiento</h3>
                 <button id="mant-close-btn" class="text-silver-lake-blue hover:text-rich-black dark:hover:text-platinum transition-colors">
-                     <i data-lucide="x" class="w-6 h-6"></i>
+                    <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
             </div>
             <form id="mantForm" class="p-6 pt-4 space-y-5">
@@ -259,61 +260,76 @@
                     <label for="descripcion" class="block text-sm font-medium text-yinmn-blue dark:text-silver-lake-blue mb-1">Descripción</label>
                     <textarea id="descripcion" name="descripcion" rows="3" placeholder="Detalle del mantenimiento (ej. Cambio de aceite, revisión de frenos...)" class="p-3 w-full bg-platinum/60 dark:bg-rich-black/40 border border-silver-lake-blue/50 dark:border-yinmn-blue rounded-lg focus:ring-yinmn-blue focus:border-yinmn-blue"></textarea>
                 </div>
-                 <div class="flex justify-end gap-3 pt-4 border-t border-platinum/60 dark:border-rich-black/60">
+                <div class="flex justify-end gap-3 pt-4 border-t border-platinum/60 dark:border-rich-black/60">
                     <button type="button" id="mant-cancel-btn" class="bg-platinum text-rich-black font-semibold py-2 px-4 rounded-lg shadow-sm hover:bg-silver-lake-blue/50 focus:outline-none focus:ring-2 focus:ring-silver-lake-blue dark:bg-yinmn-blue dark:text-white dark:hover:bg-silver-lake-blue transition-colors">
                       Cancelar
                     </button>
                     <button type="submit" class="bg-yinmn-blue text-white font-semibold py-2 px-4 rounded-lg shadow-sm hover:bg-oxford-blue focus:outline-none focus:ring-2 focus:ring-yinmn-blue transition-colors">
                       Guardar
                     </button>
-                  </div>
+                </div>
             </form>
         </div>
     </div>
 
     <script>
-        // Lógica para el modo oscuro
-        (function () {
-            const saved = localStorage.getItem('theme');
-            const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const enableDark = saved ? saved === 'dark' : prefers;
+        // IIFE para encapsular el scope y evitar contaminar el namespace global
+        (function() {
+            // Lógica para el modo oscuro
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const enableDark = savedTheme ? savedTheme === 'dark' : prefersDark;
             document.documentElement.classList.toggle('dark', enableDark);
+
+            function toggleTheme() {
+                const root = document.documentElement;
+                const isDark = root.classList.toggle('dark');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            }
+
+            document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
+            
+            // Lógica para el menú móvil
+            document.getElementById('mobile-menu-button')?.addEventListener('click', () => {
+                const sidebar = document.querySelector('aside');
+                sidebar?.classList.toggle('hidden');
+                sidebar?.classList.toggle('flex');
+            });
+
+            // Lógica del Modal
+            const addBtn = document.getElementById("btnAddMant");
+            const modal = document.getElementById("mantModal");
+            const closeModalBtn = document.getElementById("mant-close-btn");
+            const cancelBtn = document.getElementById("mant-cancel-btn");
+
+            const openModal = () => {
+                modal.classList.remove("opacity-0", "scale-95", "pointer-events-none");
+            };
+            
+            const closeModal = () => {
+                modal.classList.add("scale-95");
+                modal.classList.add("opacity-0");
+                setTimeout(() => {
+                    modal.classList.add("pointer-events-none");
+                }, 300); // Coincide con la duración de la transición
+            };
+
+            addBtn?.addEventListener("click", openModal);
+            closeModalBtn?.addEventListener("click", closeModal);
+            cancelBtn?.addEventListener("click", closeModal);
+            modal?.addEventListener("click", (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // Hacer las funciones accesibles globalmente si se necesitan desde otros scripts
+            window.openModal = openModal;
+            window.closeModal = closeModal;
+
+            // Renderizar los iconos de Lucide
+            lucide.createIcons();
         })();
-        function toggleTheme() {
-            const root = document.documentElement;
-            const isDark = root.classList.toggle('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        }
-        document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
-        document.getElementById('mobile-menu-button')?.addEventListener('click', () => document.getElementById('mobile-menu')?.classList.toggle('hidden'));
-
-        // Lógica del Modal
-        const addMantBtn = document.getElementById("btnAddMant");
-        const modal = document.getElementById("mantModal");
-        const content = document.getElementById("mant-modal-content");
-        const closeBtn = document.getElementById("mant-close-btn");
-        const cancelBtn = document.getElementById("mant-cancel-btn");
-
-        const openModal = () => {
-            if (!modal || !content) return;
-            modal.classList.remove("hidden", "opacity-0");
-            content.classList.remove("opacity-0", "scale-95");
-        };
-        const closeModal = () => {
-            if (!modal || !content) return;
-            modal.classList.add("opacity-0");
-            content.classList.add("opacity-0", "scale-95");
-            setTimeout(() => modal.classList.add("hidden"), 200);
-        };
-
-        addMantBtn?.addEventListener("click", openModal);
-        closeBtn?.addEventListener("click", closeModal);
-        cancelBtn?.addEventListener("click", closeModal);
-        modal?.addEventListener("click", (e) => {
-            if (e.target === modal) closeModal();
-        });
-
-        lucide.createIcons();
     </script>
     <script src="JS/Controllers/mantenimientoController.js" type="module"></script>
 </body>

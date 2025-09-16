@@ -81,7 +81,8 @@
     </script>
 </head>
 <body class="bg-platinum text-rich-black dark:bg-rich-black dark:text-platinum">
-    <div class="flex h-screen">
+    <!-- Contenedor principal con z-index para controlar el apilamiento -->
+    <div class="flex h-screen relative z-10">
         <!-- Barra lateral de navegación -->
         <aside class="w-64 bg-white dark:bg-oxford-blue shadow-md flex-col transition-all duration-300 hidden md:flex">
             <div class="p-6 flex items-center space-x-3 border-b border-platinum dark:border-rich-black">
@@ -91,7 +92,7 @@
                 <h1 class="text-xl font-bold text-oxford-blue dark:text-silver-lake-blue">Next Travel</h1>
             </div>
             <nav class="flex-1 px-4 py-6 space-y-2">
-                 <a href="paquetes.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
+                <a href="paquetes.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
                     <i data-lucide="package" class="sidebar-icon"></i>
                     <span>Paquetes</span>
                 </a>
@@ -131,7 +132,7 @@
             </nav>
             <div class="p-4 border-t border-platinum dark:border-rich-black">
                 <a href="cuenta.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
-                     <i data-lucide="circle-user-round" class="sidebar-icon"></i>
+                    <i data-lucide="circle-user-round" class="sidebar-icon"></i>
                     <span>Cuenta</span>
                 </a>
             </div>
@@ -141,7 +142,7 @@
         <main class="flex-1 overflow-y-auto">
             <!-- Cabecera -->
             <header class="bg-white/80 dark:bg-oxford-blue/80 backdrop-blur-xl shadow-sm p-4 flex justify-between items-center sticky top-0 z-10">
-                 <div class="flex items-center">
+                <div class="flex items-center">
                     <button id="mobile-menu-button" class="md:hidden mr-4 text-yinmn-blue dark:text-silver-lake-blue">
                         <i data-lucide="menu" class="h-6 w-6"></i>
                     </button>
@@ -176,7 +177,7 @@
                         <h2 class="text-3xl font-bold dark:text-white animate-fade-in-up">Flota de Vehículos</h2>
                         <p class="text-yinmn-blue dark:text-silver-lake-blue mt-1 animate-fade-in-up" style="animation-delay: 100ms;">Administra las unidades de transporte de la empresa.</p>
                     </div>
-                     <button id="btnAdd" class="w-full sm:w-auto mt-4 sm:mt-0 bg-yinmn-blue text-white font-semibold py-2 px-5 rounded-lg shadow-md hover:bg-oxford-blue focus:outline-none focus:ring-2 focus:ring-yinmn-blue focus:ring-opacity-75 transition-all transform hover:scale-105 animate-fade-in-up" style="animation-delay: 200ms;">
+                    <button id="btnAdd" class="w-full sm:w-auto mt-4 sm:mt-0 bg-yinmn-blue text-white font-semibold py-2 px-5 rounded-lg shadow-md hover:bg-oxford-blue focus:outline-none focus:ring-2 focus:ring-yinmn-blue focus:ring-opacity-75 transition-all transform hover:scale-105 animate-fade-in-up" style="animation-delay: 200ms;">
                         <i data-lucide="plus-circle" class="inline-block w-5 h-5 mr-2 -mt-0.5"></i>
                         Nuevo Vehículo
                     </button>
@@ -206,7 +207,7 @@
                             </tbody>
                         </table>
                     </div>
-                     <nav class="flex justify-between items-center mt-6">
+                    <nav class="flex justify-between items-center mt-6">
                         <div id="pageInfo" class="text-xs sm:text-sm text-yinmn-blue dark:text-silver-lake-blue">
                            Mostrando 0–0 de 0
                         </div>
@@ -223,7 +224,7 @@
             <div class="flex justify-between items-center pb-3 border-b border-platinum dark:border-rich-black">
                 <h3 id="itemModalLabel" class="text-2xl font-semibold dark:text-white">Nuevo Vehículo</h3>
                 <button id="closeModalBtn" class="text-silver-lake-blue hover:text-rich-black dark:hover:text-platinum transition-colors">
-                     <i data-lucide="x" class="w-6 h-6"></i>
+                    <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
             </div>
             <form id="VehiculoForm" class="mt-6 space-y-5">
@@ -248,7 +249,7 @@
                         <input type="number" id="anio" name="anio" min="1990" max="2025" placeholder="2020" class="p-3 w-full bg-platinum/60 dark:bg-rich-black/40 border border-silver-lake-blue/50 dark:border-yinmn-blue rounded-lg focus:ring-yinmn-blue focus:border-yinmn-blue" required>
                     </div>
                 </div>
-                 <div>
+                <div>
                     <label for="estado-vehiculo" class="block text-sm font-medium text-yinmn-blue dark:text-silver-lake-blue mb-1">Estado</label>
                     <select id="estado-vehiculo" name="estado" class="p-3 w-full bg-platinum/60 dark:bg-rich-black/40 border border-silver-lake-blue/50 dark:border-yinmn-blue rounded-lg focus:ring-yinmn-blue focus:border-yinmn-blue">
                         <option value="Activo">Activo</option>
@@ -257,7 +258,7 @@
                     </select>
                 </div>
                 <div>
-                     <label class="block text-sm font-medium text-yinmn-blue dark:text-silver-lake-blue mb-1">Imagen del Vehículo</label>
+                    <label class="block text-sm font-medium text-yinmn-blue dark:text-silver-lake-blue mb-1">Imagen del Vehículo</label>
                     <label for="imageFile" class="file-input-label flex flex-col items-center justify-center text-center">
                         <i data-lucide="upload-cloud" class="w-10 h-10 text-silver-lake-blue"></i>
                         <span class="mt-2 text-sm text-yinmn-blue">Seleccionar un archivo</span>
@@ -277,48 +278,66 @@
     </div>
     
     <script>
-        // Lógica para el modo oscuro
-        (function () {
-            const saved = localStorage.getItem('theme');
-            const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const enableDark = saved ? saved === 'dark' : prefers;
+        // IIFE para encapsular el scope y evitar contaminar el namespace global
+        (function() {
+            // Lógica para el modo oscuro
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const enableDark = savedTheme ? savedTheme === 'dark' : prefersDark;
             document.documentElement.classList.toggle('dark', enableDark);
+
+            function toggleTheme() {
+                const root = document.documentElement;
+                const isDark = root.classList.toggle('dark');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            }
+
+            document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
+            
+            // Lógica para el menú móvil
+            document.getElementById('mobile-menu-button')?.addEventListener('click', () => {
+                const sidebar = document.querySelector('aside');
+                sidebar?.classList.toggle('hidden');
+                sidebar?.classList.toggle('flex');
+            });
+
+            // Lógica del Modal
+            const addBtn = document.getElementById("btnAdd");
+            const modal = document.getElementById("itemModal");
+            const modalContent = modal.querySelector('div');
+            const closeModalBtn = document.getElementById("closeModalBtn");
+            const cancelBtn = document.getElementById("cancel-btn");
+
+            const openModal = () => {
+                modal.classList.remove("opacity-0", "scale-95", "pointer-events-none");
+                modalContent.classList.remove("scale-95");
+            };
+            
+            const closeModal = () => {
+                modalContent.classList.add("scale-95");
+                modal.classList.add("opacity-0");
+                setTimeout(() => {
+                    modal.classList.add("pointer-events-none");
+                }, 300); // Coincide con la duración de la transición
+            };
+
+            addBtn?.addEventListener("click", openModal);
+            closeModalBtn?.addEventListener("click", closeModal);
+            cancelBtn?.addEventListener("click", closeModal);
+            modal?.addEventListener("click", (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // Hacer las funciones accesibles globalmente si se necesitan desde otros scripts
+            window.openModal = openModal;
+            window.closeModal = closeModal;
+
+            // Renderizar los iconos de Lucide
+            lucide.createIcons();
         })();
-        function toggleTheme() {
-            const root = document.documentElement;
-            const isDark = root.classList.toggle('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        }
-        document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
-        document.getElementById('mobile-menu-button')?.addEventListener('click', () => document.getElementById('mobile-menu')?.classList.toggle('hidden'));
-
-        // Lógica del Modal
-        const addBtn = document.getElementById("btnAdd");
-        const modal = document.getElementById("itemModal");
-        const content = modal.querySelector('div');
-        const closeModalBtn = document.getElementById("closeModalBtn");
-        const cancelBtn = document.getElementById("cancel-btn");
-
-        window.openModal = () => {
-            modal.classList.remove("hidden", "opacity-0", "pointer-events-none");
-            content.classList.remove("scale-95");
-        };
-        window.closeModal = () => {
-            content.classList.add("scale-95");
-            modal.classList.add("opacity-0");
-            setTimeout(() => modal.classList.add("hidden", "pointer-events-none"), 300);
-        };
-
-        addBtn?.addEventListener("click", window.openModal);
-        closeModalBtn?.addEventListener("click", window.closeModal);
-        cancelBtn?.addEventListener("click", window.closeModal);
-        modal?.addEventListener("click", (e) => {
-            if (e.target === modal) window.closeModal();
-        });
-
-        lucide.createIcons();
     </script>
     <script src="JS/Controllers/VehiculosControllers.js" type="module"></script>
 </body>
 </html>
-
