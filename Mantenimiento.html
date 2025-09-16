@@ -1,271 +1,320 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>Gestión de Mantenimientos</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script> tailwind.config = { darkMode: 'class' } </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Mantenimiento - Next Travel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e0e1dd; /* platinum */
+        }
+        html.dark ::-webkit-scrollbar-track {
+            background: #0d1b2a; /* rich_black */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #778da9; /* silver_lake_blue */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #415a77; /* yinmn_blue */
+        }
+        .sidebar-icon {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.2s ease-in-out;
+        }
+        .group:hover .sidebar-icon {
+            transform: scale(1.1);
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+    </style>
+    <script>
+        // Configuración de Tailwind para usar los nuevos colores
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'rich-black': '#0d1b2a',
+                        'oxford-blue': '#1b263b',
+                        'yinmn-blue': '#415a77',
+                        'silver-lake-blue': '#778da9',
+                        'platinum': '#e0e1dd',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="antialiased dark:bg-gray-900" style="font-family: 'Inter', sans-serif;">
-  <header>
-      <nav class="bg-white/60 backdrop-blur-xl shadow-md sticky top-0 z-50 ring-1 ring-black ring-opacity-5 dark:bg-gray-800/60 dark:ring-white/10">
-          <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-              <div class="flex items-center justify-between h-16">
-                  <div class="flex-shrink-0">
-                      <a href="#" class="flex items-center space-x-2">
-                          <span class="text-2xl font-bold text-gray-800 dark:text-white">F.C</span>
-                      </a>
-                  </div>
-                  <div class="hidden md:flex items-center space-x-1">
-                      <div class="relative" data-dropdown>
-                          <button type="button" class="text-gray-600 dark:text-gray-300 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center" data-dropdown-button>
-                              Planes <i class="bi bi-chevron-down ml-1 text-xs"></i>
-                          </button>
-                          <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg py-1 ring-1 ring-black ring-opacity-5 hidden z-10" data-dropdown-menu>
-                              <a href="planes.html" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">Planes Estándar</a>
-                              <a href="promociones.html" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">Promociones</a>
-                          </div>
-                      </div>
-                      <a href="clientes.html" class="text-gray-600 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300">Clientes</a>
-                      <a href="empleados.html" class="text-gray-600 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300">Empleados</a>
-                      <a href="usuario.html" class="text-gray-600 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300">Usuarios</a>
-                      <a href="reserva.html" class="text-gray-600 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300">Reservas</a>
-                      <a href="Mantenimiento.html" class="bg-blue-600 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300">Mantenimientos</a>
-                      <a href="Gasto.html" class="text-gray-600 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300">Gastos</a>
-                      <a href="ganancia.html" class="text-gray-600 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300">Ganancias</a>
-                      <a href="cuenta.html" class="text-gray-600 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors dark:text-gray-300">Cuenta</a>
-                      <button id="theme-toggle" class="text-gray-600 hover:text-blue-600 dark:text-gray-300 ml-3 p-2 rounded-full">
-                          <i class="bi bi-moon-stars-fill text-lg block dark:hidden"></i>
-                          <i class="bi bi-sun-fill text-lg hidden dark:block"></i>
-                      </button>
-                  </div>
-                  <div class="flex items-center md:hidden">
-                      <button id="theme-toggle-mobile" class="text-gray-600 hover:text-blue-600 dark:text-gray-300 mr-2 p-2 rounded-full">
-                          <i class="bi bi-moon-stars-fill text-xl block dark:hidden"></i>
-                          <i class="bi bi-sun-fill text-xl hidden dark:block"></i>
-                      </button>
-                      <button type="button" id="mobile-menu-button" class="bg-gray-200 dark:bg-gray-700 inline-flex items-center justify-center p-2 rounded-lg text-gray-500 hover:text-white hover:bg-blue-600 focus:outline-none">
-                          <span class="sr-only">Abrir menú</span>
-                          <i class="bi bi-list text-2xl"></i>
-                      </button>
-                  </div>
-              </div>
-          </div>
-          <div class="md:hidden hidden" id="mobile-menu">
-              <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                  <div>
-                      <button class="w-full flex justify-between items-center text-gray-600 hover:bg-blue-600 hover:text-white px-3 py-2 rounded-lg text-base font-medium transition-colors dark:text-gray-300" data-collapse-button="planes-mobile">
-                          <span>Planes</span>
-                          <i class="bi bi-chevron-down text-sm"></i>
-                      </button>
-                      <div id="planes-mobile" class="hidden pl-4 mt-1 space-y-1">
-                          <a href="planes.html" class="text-gray-600 hover:bg-blue-600 hover:text-white block px-3 py-2 rounded-lg text-base font-medium transition-colors dark:text-gray-300">Planes Estándar</a>
-                          <a href="promociones.html" class="text-gray-600 hover:bg-blue-600 hover:text-white block px-3 py-2 rounded-lg text-base font-medium transition-colors dark:text-gray-300">Promociones</a>
-                      </div>
-                  </div>
-                  <a href="clientes.html" class="text-gray-600 hover:bg-blue-600 hover:text-white block px-3 py-2 rounded-lg text-base font-medium transition-colors dark:text-gray-300">Clientes</a>
-                  <a href="empleados.html" class="text-gray-600 hover:bg-blue-600 hover:text-white block px-3 py-2 rounded-lg text-base font-medium transition-colors dark:text-gray-300">Empleados</a>
-                  <a href="usuario.html" class="text-gray-600 hover:bg-blue-600 hover:text-white block px-3 py-2 rounded-lg text-base font-medium transition-colors dark:text-gray-300">Usuarios</a>
-                  <a href="reserva.html" class="text-gray-600 hover:bg-blue-600 hover:text-white block px-3 py-2 rounded-lg text-base font-medium transition-colors dark:text-gray-300">Reservas</a>
-                  <a href="Mantenimiento.html" class="bg-blue-600 text-white block px-3 py-2 rounded-lg text-base font-medium transition-colors dark:text-gray-300">Mantenimientos</a>
-                  <a href="Gasto.html" class="text-gray-600 hover:bg-blue-600 hover:text-white block px-3 py-2 rounded-lg text-base font-medium transition-colors dark:text-gray-300">Gastos</a>
-                  <a href="ganancia.html" class="text-gray-600 hover:bg-blue-600 hover:text-white block px-3 py-2 rounded-lg text-base font-medium transition-colors dark:text-gray-300">Ganancias</a>
-                  <a href="cuenta.html" class="text-gray-600 hover:bg-blue-600 hover:text-white block px-3 py-2 rounded-lg text-base font-medium transition-colors dark:text-gray-300">Cuenta</a>
-              </div>
-          </div>
-      </nav>
-  </header>
+<body class="bg-platinum text-rich-black dark:bg-rich-black dark:text-platinum">
+    <div class="flex h-screen">
+        <!-- Barra lateral de navegación -->
+        <aside class="w-64 bg-white dark:bg-oxford-blue shadow-md flex-col transition-all duration-300 hidden md:flex">
+            <div class="p-6 flex items-center space-x-3 border-b border-platinum dark:border-rich-black">
+                <div class="bg-yinmn-blue p-2 rounded-lg">
+                    <i data-lucide="compass" class="w-6 h-6 text-white"></i>
+                </div>
+                <h1 class="text-xl font-bold text-oxford-blue dark:text-silver-lake-blue">Next Travel</h1>
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                 <a href="paquetes.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
+                    <i data-lucide="package" class="sidebar-icon"></i>
+                    <span>Paquetes</span>
+                </a>
+                <a href="reserva.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
+                    <i data-lucide="calendar-check" class="sidebar-icon"></i>
+                    <span>Reservas</span>
+                </a>
+                <a href="clientes.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
+                    <i data-lucide="user-check" class="sidebar-icon"></i>
+                    <span>Clientes</span>
+                </a>
+                <a href="empleados.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
+                    <i data-lucide="users" class="sidebar-icon"></i>
+                    <span>Empleados</span>
+                </a>
+                <a href="usuario.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
+                    <i data-lucide="user-cog" class="sidebar-icon"></i>
+                    <span>Usuarios</span>
+                </a>
+                <a href="vehiculos.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
+                    <i data-lucide="car" class="sidebar-icon"></i>
+                    <span>Vehículos</span>
+                </a>
+                <a href="Mantenimiento.html" class="group flex items-center space-x-3 px-4 py-2 bg-silver-lake-blue/20 dark:bg-yinmn-blue/30 text-oxford-blue dark:text-platinum font-semibold rounded-lg">
+                    <i data-lucide="wrench" class="sidebar-icon"></i>
+                    <span>Mantenimiento</span>
+                </a>
+                <hr class="my-2 border-platinum dark:border-rich-black/50">
+                <a href="Gasto.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
+                    <i data-lucide="receipt-text" class="sidebar-icon"></i>
+                    <span>Gastos</span>
+                </a>
+                <a href="ganancia.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
+                    <i data-lucide="trending-up" class="sidebar-icon"></i>
+                    <span>Ganancias</span>
+                </a>
+            </nav>
+            <div class="p-4 border-t border-platinum dark:border-rich-black">
+                <a href="cuenta.html" class="group flex items-center space-x-3 px-4 py-2 text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum dark:hover:bg-rich-black hover:text-oxford-blue dark:hover:text-platinum rounded-lg transition-colors">
+                     <i data-lucide="circle-user-round" class="sidebar-icon"></i>
+                    <span>Cuenta</span>
+                </a>
+            </div>
+        </aside>
 
-  <main class="container mx-auto p-4 sm:p-6 lg:p-8">
-    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-      <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
-        <i class="bi bi-tools text-blue-600"></i>
-        Gestión de Mantenimientos
-      </h1>
-      <div class="w-full sm:w-auto flex items-center gap-2">
-        <input id="qMant" type="search" placeholder="Buscar por placa, modelo o descripción…"
-          class="w-full sm:w-80 p-2.5 bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-lg border border-white/40 dark:border-white/10 text-sm text-gray-800 dark:text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-        <select id="pageSizeMant"
-          class="p-2.5 bg-white/60 dark:bg-gray-800/60 backdrop-blur-xl rounded-lg border border-white/40 dark:border-white/10 text-sm text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option value="5">5 / pág.</option>
-          <option value="10" selected>10 / pág.</option>
-          <option value="25">25 / pág.</option>
-          <option value="50">50 / pág.</option>
-        </select>
-        <button id="btnRefreshMant" title="Actualizar"
-          class="px-3 py-2 bg-white/60 dark:bg-gray-800/60 rounded-lg border border-white/40 dark:border-white/10 text-sm text-gray-700 dark:text-gray-200 hover:bg-white/80 dark:hover:bg-gray-800/80 transition-colors">
-          <i class="bi bi-arrow-clockwise"></i>
-        </button>
-        <button id="btnAddMant"
-          class="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors">
-          <i class="bi bi-plus-lg mr-1"></i> Agregar
-        </button>
-      </div>
+        <!-- Contenido principal -->
+        <main class="flex-1 overflow-y-auto">
+            <!-- Cabecera -->
+            <header class="bg-white/80 dark:bg-oxford-blue/80 backdrop-blur-xl shadow-sm p-4 flex justify-between items-center sticky top-0 z-10">
+                <div class="flex items-center">
+                    <button id="mobile-menu-button" class="md:hidden mr-4 text-yinmn-blue dark:text-silver-lake-blue">
+                        <i data-lucide="menu" class="h-6 w-6"></i>
+                    </button>
+                    <div class="relative w-full max-w-md">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-silver-lake-blue w-5 h-5"></i>
+                        <input type="text" id="searchInput" placeholder="Buscar por placa, modelo..." class="w-full pl-10 pr-4 py-2 bg-platinum/60 dark:bg-rich-black/40 border border-silver-lake-blue/50 dark:border-yinmn-blue rounded-lg focus:outline-none focus:ring-2 focus:ring-yinmn-blue text-sm">
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4 sm:space-x-6">
+                    <button id="theme-toggle" class="text-yinmn-blue dark:text-silver-lake-blue hover:text-rich-black dark:hover:text-platinum transition-colors">
+                        <i data-lucide="moon" class="h-5 w-5 block dark:hidden"></i>
+                        <i data-lucide="sun" class="h-5 w-5 hidden dark:block"></i>
+                    </button>
+                    <button class="text-yinmn-blue dark:text-silver-lake-blue hover:text-rich-black dark:hover:text-platinum relative transition-colors">
+                        <i data-lucide="bell" class="h-5 w-5"></i>
+                        <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">3</span>
+                    </button>
+                    <div class="flex items-center space-x-3">
+                        <img src="https://placehold.co/40x40/778da9/e0e1dd?text=AV" alt="Avatar" class="w-10 h-10 rounded-full object-cover">
+                        <div class="hidden sm:block">
+                            <p class="font-semibold text-sm dark:text-white">Ana Varela</p>
+                            <p class="text-xs text-yinmn-blue dark:text-silver-lake-blue">Agente de Viajes</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Contenido del Dashboard de Mantenimiento -->
+            <div class="p-6 md:p-8">
+                <div class="flex flex-col sm:flex-row justify-between items-start mb-8">
+                    <div>
+                        <h2 class="text-3xl font-bold dark:text-white animate-fade-in-up">Mantenimiento de Flota</h2>
+                        <p class="text-yinmn-blue dark:text-silver-lake-blue mt-1 animate-fade-in-up" style="animation-delay: 100ms;">Registra y consulta el historial de mantenimiento de vehículos.</p>
+                    </div>
+                     <button id="btnAddMant" class="w-full sm:w-auto mt-4 sm:mt-0 bg-yinmn-blue text-white font-semibold py-2 px-5 rounded-lg shadow-md hover:bg-oxford-blue focus:outline-none focus:ring-2 focus:ring-yinmn-blue focus:ring-opacity-75 transition-all transform hover:scale-105 animate-fade-in-up" style="animation-delay: 200ms;">
+                        <i data-lucide="plus-circle" class="inline-block w-5 h-5 mr-2 -mt-0.5"></i>
+                        Nuevo Registro
+                    </button>
+                </div>
+                
+                <!-- Tarjetas de métricas -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white dark:bg-oxford-blue p-6 rounded-xl shadow-sm flex items-center space-x-4 animate-fade-in-up" style="animation-delay: 300ms;">
+                        <div class="bg-sky-100 dark:bg-sky-900/50 text-sky-600 dark:text-sky-400 p-3 rounded-lg"><i data-lucide="car" class="w-6 h-6"></i></div>
+                        <div>
+                            <p class="text-yinmn-blue dark:text-silver-lake-blue text-sm">Vehículos Activos</p>
+                            <p class="text-2xl font-bold dark:text-white">15</p>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-oxford-blue p-6 rounded-xl shadow-sm flex items-center space-x-4 animate-fade-in-up" style="animation-delay: 400ms;">
+                        <div class="bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 p-3 rounded-lg"><i data-lucide="shield-alert" class="w-6 h-6"></i></div>
+                        <div>
+                            <p class="text-yinmn-blue dark:text-silver-lake-blue text-sm">En Mantenimiento</p>
+                            <p class="text-2xl font-bold dark:text-white">2</p>
+                        </div>
+                    </div>
+                     <div class="bg-white dark:bg-oxford-blue p-6 rounded-xl shadow-sm flex items-center space-x-4 animate-fade-in-up" style="animation-delay: 500ms;">
+                        <div class="bg-rose-100 dark:bg-rose-900/50 text-rose-600 dark:text-rose-400 p-3 rounded-lg"><i data-lucide="dollar-sign" class="w-6 h-6"></i></div>
+                        <div>
+                            <p class="text-yinmn-blue dark:text-silver-lake-blue text-sm">Costo (Mes)</p>
+                            <p class="text-2xl font-bold dark:text-white">$750.00</p>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-oxford-blue p-6 rounded-xl shadow-sm flex items-center space-x-4 animate-fade-in-up" style="animation-delay: 600ms;">
+                        <div class="bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 p-3 rounded-lg"><i data-lucide="check-check" class="w-6 h-6"></i></div>
+                        <div>
+                            <p class="text-yinmn-blue dark:text-silver-lake-blue text-sm">Servicios (Mes)</p>
+                            <p class="text-2xl font-bold dark:text-white">8</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de Mantenimientos -->
+                <div class="bg-white dark:bg-oxford-blue p-4 sm:p-6 rounded-xl shadow-sm animate-fade-in-up" style="animation-delay: 700ms;">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm" id="mantenimientosTable">
+                            <thead class="text-xs text-yinmn-blue dark:text-silver-lake-blue uppercase bg-platinum/60 dark:bg-rich-black/50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 rounded-l-lg">Vehículo</th>
+                                    <th scope="col" class="px-6 py-3">Placa</th>
+                                    <th scope="col" class="px-6 py-3">Tipo</th>
+                                    <th scope="col" class="px-6 py-3">Descripción</th>
+                                    <th scope="col" class="px-6 py-3">Fecha</th>
+                                    <th scope="col" class="px-6 py-3 text-center rounded-r-lg">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblBodyMant" class="dark:text-platinum">
+                                <!-- Filas se cargarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                     <nav class="flex justify-between items-center mt-6">
+                        <div id="pageInfoMant" class="text-xs sm:text-sm text-yinmn-blue dark:text-silver-lake-blue">
+                           Mostrando 0–0 de 0
+                        </div>
+                        <ul id="pagerMant" class="pagination flex items-center gap-1"></ul>
+                    </nav>
+                </div>
+            </div>
+        </main>
     </div>
-    <div class="bg-white/60 backdrop-blur-xl rounded-2xl shadow-lg overflow-hidden ring-1 ring-black ring-opacity-5 dark:bg-gray-800/60 dark:ring-white/10">
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left">
-          <thead class="text-xs text-gray-900 uppercase bg-white/40 dark:bg-gray-900/40 dark:text-gray-300">
-            <tr>
-              <th class="px-6 py-3">ID</th>
-              <th class="px-6 py-3">Placa</th>
-              <th class="px-6 py-3">Modelo</th>
-              <th class="px-6 py-3">Tipo</th>
-              <th class="px-6 py-3">Descripción</th>
-              <th class="px-6 py-3">Fecha</th>
-              <th class="px-6 py-3 text-center">Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="tblBodyMant" class="text-gray-800 dark:text-gray-200">
-            <tr class="border-b border-white/30 hover:bg-white/20 dark:border-gray-700/50 dark:hover:bg-white/10 transition-colors duration-300">
-              <td colspan="7" class="px-6 py-4 text-center">No hay registros</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="flex flex-col sm:flex-row justify-between items-center gap-3 px-4 py-3 bg-white/40 dark:bg-gray-900/40">
-        <div id="pageInfoMant" class="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-          Mostrando 0–0 de 0
+
+    <!-- Modal para Agregar/Editar Mantenimiento -->
+    <div id="mantModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 opacity-0 scale-95 pointer-events-none transition-all duration-300">
+        <div id="mant-modal-content" class="bg-white dark:bg-oxford-blue rounded-2xl shadow-2xl w-full max-w-md p-6 sm:p-8 transform transition-all duration-300">
+            <div class="flex justify-between items-center pb-3 border-b border-platinum dark:border-rich-black">
+                <h3 id="mantModalLabel" class="text-2xl font-semibold dark:text-white">Nuevo Mantenimiento</h3>
+                <button id="mant-close-btn" class="text-silver-lake-blue hover:text-rich-black dark:hover:text-platinum transition-colors">
+                     <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <form id="mantForm" class="p-6 pt-4 space-y-5">
+                <input type="hidden" id="idMantenimiento" name="idMantenimiento">
+                <div>
+                    <label for="idVehiculo" class="block text-sm font-medium text-yinmn-blue dark:text-silver-lake-blue mb-1">Vehículo</label>
+                    <select id="idVehiculo" name="idVehiculo" class="p-3 w-full bg-platinum/60 dark:bg-rich-black/40 border border-silver-lake-blue/50 dark:border-yinmn-blue rounded-lg focus:ring-yinmn-blue focus:border-yinmn-blue" required>
+                        <option value="">Seleccione un vehículo...</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="idTipoMantenimiento" class="block text-sm font-medium text-yinmn-blue dark:text-silver-lake-blue mb-1">Tipo de Mantenimiento</label>
+                    <select id="idTipoMantenimiento" name="idTipoMantenimiento" class="p-3 w-full bg-platinum/60 dark:bg-rich-black/40 border border-silver-lake-blue/50 dark:border-yinmn-blue rounded-lg focus:ring-yinmn-blue focus:border-yinmn-blue" required>
+                        <option value="">Seleccione un tipo...</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="descripcion" class="block text-sm font-medium text-yinmn-blue dark:text-silver-lake-blue mb-1">Descripción</label>
+                    <textarea id="descripcion" name="descripcion" rows="3" placeholder="Detalle del mantenimiento (ej. Cambio de aceite, revisión de frenos...)" class="p-3 w-full bg-platinum/60 dark:bg-rich-black/40 border border-silver-lake-blue/50 dark:border-yinmn-blue rounded-lg focus:ring-yinmn-blue focus:border-yinmn-blue"></textarea>
+                </div>
+                 <div class="flex justify-end gap-3 pt-4 border-t border-platinum/60 dark:border-rich-black/60">
+                    <button type="button" id="mant-cancel-btn" class="bg-platinum text-rich-black font-semibold py-2 px-4 rounded-lg shadow-sm hover:bg-silver-lake-blue/50 focus:outline-none focus:ring-2 focus:ring-silver-lake-blue dark:bg-yinmn-blue dark:text-white dark:hover:bg-silver-lake-blue transition-colors">
+                      Cancelar
+                    </button>
+                    <button type="submit" class="bg-yinmn-blue text-white font-semibold py-2 px-4 rounded-lg shadow-sm hover:bg-oxford-blue focus:outline-none focus:ring-2 focus:ring-yinmn-blue transition-colors">
+                      Guardar
+                    </button>
+                  </div>
+            </form>
         </div>
-        <nav aria-label="Paginación">
-          <ul id="pagerMant" class="inline-flex items-center list-none m-0 p-0 gap-2"></ul>
-        </nav>
-      </div>
     </div>
-  </main>
 
-<div id="mantModal"
-     class="fixed inset-0 z-[60] bg-black/60 flex justify-center items-center p-4 hidden opacity-0">
-  <div id="mant-modal-content"
-       class="w-full max-w-md rounded-2xl shadow-2xl ring-1 ring-black/10
-              bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl
-              transform scale-95 translate-y-4 opacity-0 transition-all duration-200">
-    <div class="flex justify-between items-center p-6 pb-3 border-b border-gray-300/60 dark:border-gray-600/60">
-      <h3 id="mantModalLabel" class="text-2xl font-semibold text-gray-800 dark:text-white">
-        Nuevo Mantenimiento
-      </h3>
-      <button id="mant-close-btn"
-              class="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white">
-        <i class="bi bi-x-lg text-2xl"></i>
-      </button>
-    </div>
-    <form id="mantForm" class="p-6 pt-4 space-y-5">
-      <input type="hidden" id="idMantenimiento" name="idMantenimiento">
-      <div>
-        <label for="idVehiculo" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vehículo</label>
-        <select id="idVehiculo" name="idVehiculo"
-                class="p-3 w-full bg-white/60 dark:bg-gray-700/60 border border-gray-300/60 dark:border-gray-600/60 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                required>
-          <option value="">Seleccione…</option>
-        </select>
-      </div>
-      <div>
-        <label for="idTipoMantenimiento" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo de mantenimiento</label>
-        <select id="idTipoMantenimiento" name="idTipoMantenimiento"
-                class="p-3 w-full bg-white/60 dark:bg-gray-700/60 border border-gray-300/60 dark:border-gray-600/60 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                required>
-          <option value="">Seleccione…</option>
-        </select>
-      </div>
-      <div>
-        <label for="descripcion" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Descripción</label>
-        <textarea id="descripcion" name="descripcion" rows="3" placeholder="Detalle del mantenimiento…"
-                  class="p-3 w-full bg-white/60 dark:bg-gray-700/60 border border-gray-300/60 dark:border-gray-600/60 rounded-lg focus:ring-blue-500 focus:border-blue-500"></textarea>
-      </div>
-      <div>
-        <label for="fechaMant" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Fecha</label>
-        <input type="datetime-local" id="fechaMant" name="fecha"
-               class="p-3 w-full bg-white/60 dark:bg-gray-700/60 border border-gray-300/60 dark:border-gray-600/60 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-               required>
-      </div>
-      <div class="flex justify-end gap-3 pt-4 border-t border-gray-300/60 dark:border-gray-600/60">
-        <button type="button" id="mant-cancel-btn"
-                class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500">
-          Cancelar
-        </button>
-        <button type="submit"
-                class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700">
-          Guardar
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
+    <script>
+        // Lógica para el modo oscuro
+        (function () {
+            const saved = localStorage.getItem('theme');
+            const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const enableDark = saved ? saved === 'dark' : prefers;
+            document.documentElement.classList.toggle('dark', enableDark);
+        })();
+        function toggleTheme() {
+            const root = document.documentElement;
+            const isDark = root.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+        document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
+        document.getElementById('mobile-menu-button')?.addEventListener('click', () => document.getElementById('mobile-menu')?.classList.toggle('hidden'));
 
-  <script>
-    (function () {
-      const saved = localStorage.getItem('theme');
-      const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const enableDark = saved ? saved === 'dark' : prefers;
-      document.documentElement.classList.toggle('dark', enableDark);
-    })();
-    function toggleTheme() {
-      const root = document.documentElement;
-      const isDark = root.classList.toggle('dark');
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    }
-    document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
-    document.getElementById('theme-toggle-mobile')?.addEventListener('click', toggleTheme);
-    const btnMenu = document.getElementById('mobile-menu-button');
-    const menu = document.getElementById('mobile-menu');
-    btnMenu?.addEventListener('click', () => menu.classList.toggle('hidden'));
-        document.querySelectorAll('[data-dropdown-button]').forEach(button => {
-        button.addEventListener('click', () => {
-            const dropdown = button.nextElementSibling;
-            dropdown.classList.toggle('hidden');
+        // Lógica del Modal
+        const addMantBtn = document.getElementById("btnAddMant");
+        const modal = document.getElementById("mantModal");
+        const content = document.getElementById("mant-modal-content");
+        const closeBtn = document.getElementById("mant-close-btn");
+        const cancelBtn = document.getElementById("mant-cancel-btn");
+
+        const openModal = () => {
+            if (!modal || !content) return;
+            modal.classList.remove("hidden", "opacity-0");
+            content.classList.remove("opacity-0", "scale-95");
+        };
+        const closeModal = () => {
+            if (!modal || !content) return;
+            modal.classList.add("opacity-0");
+            content.classList.add("opacity-0", "scale-95");
+            setTimeout(() => modal.classList.add("hidden"), 200);
+        };
+
+        addMantBtn?.addEventListener("click", openModal);
+        closeBtn?.addEventListener("click", closeModal);
+        cancelBtn?.addEventListener("click", closeModal);
+        modal?.addEventListener("click", (e) => {
+            if (e.target === modal) closeModal();
         });
-    });
-    document.querySelectorAll('[data-collapse-button]').forEach(button => {
-        button.addEventListener('click', () => {
-            const collapseId = button.dataset.collapseButton;
-            const collapseMenu = document.getElementById(collapseId);
-            collapseMenu.classList.toggle('hidden');
-        });
-    });
-  </script>
-  <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const openBtn   = document.getElementById("btnAddMant");
-    const modal     = document.getElementById("mantModal");
-    const content   = document.getElementById("mant-modal-content");
-    const closeBtn  = document.getElementById("mant-close-btn");
-    const cancelBtn = document.getElementById("mant-cancel-btn");
-    const fechaInp  = document.getElementById("fechaMant");
 
-    function setNow() {
-      const n = new Date(); n.setSeconds(0,0);
-      const pad = (x)=>String(x).padStart(2,"0");
-      fechaInp.value = `${n.getFullYear()}-${pad(n.getMonth()+1)}-${pad(n.getDate())}T${pad(n.getHours())}:${pad(n.getMinutes())}`;
-    }
-    function showModal() {
-      if (!modal || !content) return;
-      modal.classList.remove("hidden");
-      requestAnimationFrame(() => {
-        modal.classList.remove("opacity-0");
-        content.classList.remove("opacity-0","scale-95","translate-y-4");
-      });
-      setNow();
-    }
-    function hideModal() {
-      if (!modal || !content) return;
-      modal.classList.add("opacity-0");
-      content.classList.add("opacity-0","scale-95","translate-y-4");
-      setTimeout(() => modal.classList.add("hidden"), 200);
-    }
-    openBtn?.addEventListener("click", showModal);
-    closeBtn?.addEventListener("click", hideModal);
-    cancelBtn?.addEventListener("click", hideModal);
-    modal?.addEventListener("click", (e) => {
-      if (e.target === modal) hideModal();
-    });
-  });
-</script>
-  <script src="JS/Controllers/mantenimientoController.js" type="module"></script>
+        lucide.createIcons();
+    </script>
+    <script src="JS/Controllers/mantenimientoController.js" type="module"></script>
 </body>
 </html>

@@ -1,574 +1,269 @@
-// JS/controllers/mantenimientoController.js
-import { getMantenimientos,
-    createMantenimiento, getMantenimientoById, getTiposMantenimientoMin,getVehiculosMin,
-    deleteMantenimiento, updateMantenimiento 
- } from "../Services/mantenimientoService.js";
+import { 
+    getMantenimientos,
+    createMantenimiento, 
+    getMantenimientoById, 
+    getTiposMantenimientoMin,
+    getVehiculosMin,
+    deleteMantenimiento, 
+    updateMantenimiento 
+} from "../Services/mantenimientoService.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Ajusta estos IDs a los de tu HTML (te dejo los de tu página Tailwind)
-  const tableBody  = document.querySelector("#tblBodyMant");    // <tbody>
-  const pageInfo   = document.getElementById("pageInfoMant");    // texto "Mostrando X–Y de Z"
-  const pager      = document.getElementById("pagerMant");       // <ul> de paginación
+    // --- Referencias a los elementos del DOM ---
+    const tableBody = document.getElementById("tblBodyMant");
+    const pageInfo = document.getElementById("pageInfoMant");
+    const pager = document.getElementById("pagerMant");
+    const searchInput = document.getElementById("searchInput");
 
-  // Controles de buscador/tamaño/refresh (si los tienes)
-  const qInput     = document.getElementById("qMant");           // input de búsqueda
-  const filterSel  = document.getElementById("filterField");     // select de campo
-  const pageSizeEl = document.getElementById("pageSizeMant");    // select tamaño
-  const refreshBtn = document.getElementById("btnRefreshMant");  // botón actualizar
+    // --- Referencias al Modal y Formulario ---
+    const formEl = document.getElementById("mantForm");
+    const lblModal = document.getElementById("mantModalLabel");
+    const btnAdd = document.getElementById("btnAddMant");
+    const selVehiculo = document.getElementById("idVehiculo");
+    const selTipo = document.getElementById("idTipoMantenimiento");
+    const inpDescripcion = document.getElementById("descripcion");
+    const hiddenIdInput = document.getElementById("idMantenimiento");
+    
+    // Las funciones openModal y closeModal están definidas globalmente en el HTML.
 
-  const state = {
-    page: 0,
-    size: parseInt(pageSizeEl?.value || "10", 10),
-    sort: "fecha,desc",
-    field: filterSel?.value || "placa",
-    q: ""
-  };
-
-  init();
-
-  function init() {
-    bindUI();
-    load();
-  }
-
-  function bindUI() {
-    pageSizeEl?.addEventListener("change", () => {
-      state.size = parseInt(pageSizeEl.value, 10);
-      state.page = 0;
-      load();
-    });
-
-    filterSel?.addEventListener("change", () => {
-      state.field = filterSel.value;
-      state.page = 0;
-      load();
-    });
-
-    qInput?.addEventListener("input", debounce(() => {
-      state.q = qInput.value.trim();
-      state.page = 0;
-      load();
-    }, 350));
-
-    refreshBtn?.addEventListener("click", () => {
-      qInput && (qInput.value = "");
-      state.q = "";
-      state.page = 0;
-      load();
-    });
-  }
-
-  async function load() {
-    try {
-      const { items, total, totalPages, page, size } = await getMantenimientos(state);
-      renderTable(items);
-      renderInfo(total, page, size);
-      renderPager(totalPages, page);
-    } catch (err) {
-      console.error("GET mantenimientos falló:", err);
-      tableBody.innerHTML = `<tr><td colspan="7" class="px-6 py-6 text-center text-red-500">Error al cargar</td></tr>`;
-      pageInfo.textContent = "—";
-      pager.innerHTML = "";
-    }
-  }
-
-  function renderTable(items) {
-    if (!items?.length) {
-      tableBody.innerHTML = `<tr><td colspan="7" class="px-6 py-6 text-center">Actualmente no hay registros</td></tr>`;
-      return;
-    }
-    tableBody.innerHTML = items.map(it => `
-      <tr class="border-b border-white/30 dark:border-gray-700/50">
-        <td class="px-6 py-4">${it.idMantenimiento ?? ""}</td>
-        <td class="px-6 py-4">${it.placa ?? ""}</td>
-        <td class="px-6 py-4">${it.modelo ?? ""}</td>
-        <td class="px-6 py-4">${it.tipoMantenimiento ?? ""}</td>
-        <td class="px-6 py-4">${it.descripcion ?? ""}</td>
-        <td class="px-6 py-4">${fmtDate(it.fecha)}</td>
-        <td class="px-6 py-4 text-center">
-          <button class="btn btn-sm btn-outline-secondary edit-btn"><i class="bi bi-pencil-square"></i></button>
-          <button class="btn btn-sm btn-outline-danger delete-btn"><i class="bi bi-trash-fill"></i></button>
-        </td>
-      </tr>
-    `).join("");
-  }
-
-  function renderInfo(total, page, size) {
-    if (!total) { pageInfo.textContent = "Sin resultados"; return; }
-    const from = page * size + 1;
-    const to   = Math.min(total, (page + 1) * size);
-    pageInfo.textContent = `Mostrando ${from}-${to} de ${total}`;
-  }
-
-  function renderPager(totalPages, currentPage) {
-    pager.innerHTML = "";
-    const mk = (label, target, { disabled=false, active=false } = {}) => {
-      const a = document.createElement("a");
-      a.href = "#";
-      a.className =
-        `inline-flex items-center px-3 py-2 rounded-lg
-         ${active ? "border border-blue-500 bg-blue-600 text-white"
-                  : "border border-white/40 dark:border-white/10 bg-white/40 dark:bg-gray-800/40 hover:bg-white/60 dark:hover:bg-gray-800/60"}
-         ${disabled ? " pointer-events-none opacity-50" : ""}`;
-      a.textContent = label;
-      a.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (disabled || active) return;
-        state.page = target;
-        load();
-      });
-      const li = document.createElement("li"); li.appendChild(a); return li;
+    // --- Estado de la aplicación ---
+    const state = {
+        page: 0,
+        size: 10,
+        sort: "fecha,desc",
+        q: "",
+        field: "placa" // Campo de búsqueda por defecto
     };
 
-    pager.appendChild(mk("«", Math.max(0, currentPage - 1), { disabled: currentPage === 0 }));
-    const MAX = 7;
-    let start = Math.max(0, currentPage - Math.floor(MAX / 2));
-    let end   = Math.min(totalPages - 1, start + MAX - 1);
-    start     = Math.max(0, end - MAX + 1);
-    for (let p = start; p <= end; p++) pager.appendChild(mk(String(p + 1), p, { active: p === currentPage }));
-    pager.appendChild(mk("»", Math.min(totalPages - 1, currentPage + 1), { disabled: currentPage >= totalPages - 1 }));
-  }
+    // --- Carga Inicial ---
+    load();
 
-  function debounce(fn, ms = 350) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
-  function fmtDate(iso) {
-    if (!iso) return "";
-    const d = new Date(iso);
-    return isNaN(d) ? String(iso) : d.toLocaleString("es-SV", {
-      year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit"
+    // --- Vinculación de Eventos de UI ---
+    
+    // Búsqueda con debounce
+    let searchTimeout;
+    searchInput?.addEventListener("input", () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            state.q = searchInput.value.trim();
+            state.page = 0;
+            // Búsqueda inteligente: si parece placa, busca por placa, si no, por modelo.
+            state.field = /^[A-Z0-9]{3,8}$/i.test(state.q) ? "placa" : "modelo";
+            load();
+        }, 400);
     });
-  }
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// JS/controllers/mantenimientoController.js
-// Controla el modal + carga de combos + POST de Mantenimiento
-
-document.addEventListener("DOMContentLoaded", () => {
-  // ---- Refs del DOM (deben existir en tu HTML) ----
-  const btnAdd       = document.getElementById("btnAddMant");
-  const modalEl      = document.getElementById("mantModal");
-  const modalContent = document.getElementById("mant-modal-content");
-  const formEl       = document.getElementById("mantForm");
-  const selVehiculo  = document.getElementById("idVehiculo");
-  const selTipo      = document.getElementById("idTipoMantenimiento");
-  const inpFecha     = document.getElementById("fechaMant");
-  const btnClose     = document.getElementById("mant-close-btn");
-  const btnCancel    = document.getElementById("mant-cancel-btn");
-
-  const API_BASE = "http://localhost:8080/api/mantenimientos";
-
-  // ---- Debug rápido de existencia ----
-  console.log("[CHECK]", {
-    btnAdd: !!btnAdd, modalEl: !!modalEl, modalContent: !!modalContent,
-    formEl: !!formEl, selVehiculo: !!selVehiculo, selTipo: !!selTipo, inpFecha: !!inpFecha
-  });
-
-  // ---- Helpers modal ----
-  function showModal() {
-    if (!modalEl || !modalContent) return;
-    modalEl.classList.remove("hidden");
-    requestAnimationFrame(() => {
-      modalEl.classList.remove("opacity-0");
-      modalContent.classList.remove("opacity-0", "scale-95", "translate-y-4");
+    
+    // Abrir modal para crear
+    btnAdd?.addEventListener("click", async () => {
+        formEl.reset();
+        formEl.dataset.mode = "create";
+        hiddenIdInput.value = "";
+        lblModal.textContent = "Nuevo Mantenimiento";
+        await loadSelectOptions();
+        openModal();
     });
-  }
-  function hideModal() {
-    if (!modalEl || !modalContent) return;
-    modalEl.classList.add("opacity-0");
-    modalContent.classList.add("opacity-0", "scale-95", "translate-y-4");
-    setTimeout(() => modalEl.classList.add("hidden"), 200);
-  }
 
-  // ---- Util ----
-  async function fetchJson(url, init) {
-    const res = await fetch(url, init);
-    const text = await res.text();
-    try { return JSON.parse(text); }
-    catch { throw new Error(`Respuesta no JSON (${res.status}): ${text}`); }
-  }
-  function setNow() {
-    if (!inpFecha) return;
-    const n = new Date(); n.setSeconds(0,0);
-    const pad = (x) => String(x).padStart(2, "0");
-    inpFecha.value =
-      `${n.getFullYear()}-${pad(n.getMonth()+1)}-${pad(n.getDate())}T${pad(n.getHours())}:${pad(n.getMinutes())}`;
-  }
+    // Enviar formulario (Crear o Editar)
+    formEl?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const mode = formEl.dataset.mode;
+        const dto = {
+            idVehiculo: Number(selVehiculo.value),
+            idTipoMantenimiento: Number(selTipo.value),
+            descripcion: inpDescripcion.value.trim()
+        };
 
-  // ---- Cargar combos ----
-  async function cargarVehiculos() {
-    if (!selVehiculo) return;
-    selVehiculo.innerHTML = `<option value="">Cargando…</option>`;
-    try {
-      const data = await fetchJson(`${API_BASE}/vehiculos`); // [{idVehiculo, placa}]
-      selVehiculo.innerHTML = `<option value="">Seleccione…</option>`;
-      for (const v of (data || [])) {
-        const opt = document.createElement("option");
-        opt.value = String(v.idVehiculo);
-        opt.textContent = v.placa ?? "";
-        selVehiculo.appendChild(opt);
-      }
-      if (!data || data.length === 0) {
-        selVehiculo.innerHTML += `<option value="">(Sin vehículos)</option>`;
-      }
-    } catch (err) {
-      console.error("Error cargando vehículos:", err);
-      selVehiculo.innerHTML = `<option value="">(Error cargando)</option>`;
-    }
-  }
+        if (!dto.idVehiculo || !dto.idTipoMantenimiento) {
+            showAlert({ icon: "error", title: "Datos incompletos", text: "Debe seleccionar un vehículo y un tipo de mantenimiento." });
+            return;
+        }
 
-  async function cargarTipos() {
-    if (!selTipo) return;
-    selTipo.innerHTML = `<option value="">Cargando…</option>`;
-    try {
-      const data = await fetchJson(`${API_BASE}/tipos-mantenimiento`); // [{idTipoMantenimiento, nombreTipo}]
-      selTipo.innerHTML = `<option value="">Seleccione…</option>`;
-      for (const t of (data || [])) {
-        const opt = document.createElement("option");
-        opt.value = String(t.idTipoMantenimiento);
-        opt.textContent = t.nombreTipo ?? "";
-        selTipo.appendChild(opt);
-      }
-      if (!data || data.length === 0) {
-        selTipo.innerHTML += `<option value="">(Sin tipos)</option>`;
-      }
-    } catch (err) {
-      console.error("Error cargando tipos:", err);
-      selTipo.innerHTML = `<option value="">(Error cargando)</option>`;
-    }
-  }
-
-  // ---- Abrir modal ----
-  btnAdd?.addEventListener("click", async () => {
-    try {
-      formEl?.reset();
-      setNow();
-      await Promise.all([cargarVehiculos(), cargarTipos()]);
-      showModal();
-    } catch (err) {
-      console.error("Error al abrir modal:", err);
-      Swal.fire({ icon: "error", title: "Error", text: err.message });
-    }
-  });
-
-  // Cerrar modal
-  btnClose?.addEventListener("click", hideModal);
-  btnCancel?.addEventListener("click", hideModal);
-  modalEl?.addEventListener("click", (e) => { if (e.target === modalEl) hideModal(); });
-
-  // ---- POST (crear mantenimiento) ----
-  formEl?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const submitBtn = formEl.querySelector('button[type="submit"]');
-    submitBtn && (submitBtn.disabled = true);
-
-    try {
-      const idVehiculo = Number(selVehiculo?.value || 0);
-      const idTipoMantenimiento = Number(selTipo?.value || 0);
-      const descripcion = (formEl.descripcion?.value || "").trim();
-      const fecha = inpFecha?.value || "";
-
-      if (!idVehiculo) throw new Error("Debe seleccionar un vehículo.");
-      if (!idTipoMantenimiento) throw new Error("Debe seleccionar un tipo de mantenimiento.");
-      if (!fecha) throw new Error("Debe seleccionar una fecha.");
-
-      const dto = { idVehiculo, idTipoMantenimiento, descripcion, fecha };
-
-      const res = await fetch(`${API_BASE}/mantenimientos`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dto),
-      });
-
-      if (!res.ok) {
-        let msg = `Error HTTP ${res.status}`;
         try {
-          const p = await res.json();
-          msg = p?.message || p?.mensaje ||
-                (p?.errors ? Object.entries(p.errors).map(([k,v]) => `${k}: ${v}`).join("\n") : msg);
-        } catch {}
-        throw new Error(msg);
-      }
-
-      const payload = await res.json().catch(() => ({}));
-
-      await Swal.fire({
-        icon: "success",
-        title: "¡Guardado!",
-        text: payload?.idMantenimiento
-          ? `Mantenimiento creado (ID ${payload.idMantenimiento})`
-          : "Mantenimiento creado correctamente.",
-        timer: 1600,
-        showConfirmButton: false,
-      });
-
-      formEl.reset();
-      hideModal();
-      // Notificar para recargar la tabla (tu GET debe escuchar esto)
-      document.dispatchEvent(new Event("mantenimientos:refresh"));
-    } catch (err) {
-      Swal.fire({ icon: "error", title: "Error", text: err.message || "No se pudo crear el mantenimiento." });
-    } finally {
-      submitBtn && (submitBtn.disabled = false);
-    }
-  });
-});
-
-
-
-const tbody = document.getElementById("tblBodyMant");
-
-tbody?.addEventListener("click", async (e) => {
-  const btn = e.target.closest(".delete-btn"); // busca el botón con la clase delete-btn
-  if (!btn) return;
-
-  // Obtenemos el id desde la fila <tr>
-  const row = btn.closest("tr");
-  const id = row?.dataset.id || row?.querySelector("td")?.textContent?.trim();
-
-  if (!id) {
-    console.error("No se pudo obtener el ID del mantenimiento");
-    return;
-  }
-
-  // Confirmación con SweetAlert
-  const confirm = await Swal.fire({
-    title: "¿Estás seguro?",
-    text: "Esta acción eliminará el mantenimiento permanentemente",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
-    confirmButtonText: "Sí, eliminar",
-    cancelButtonText: "Cancelar",
-  });
-
-  if (!confirm.isConfirmed) return;
-
-  try {
-    await deleteMantenimiento(id);
-
-    // Eliminamos la fila directamente del DOM
-    row.remove();
-
-    Swal.fire({
-      icon: "success",
-      title: "Eliminado",
-      text: "El mantenimiento fue eliminado correctamente",
-      timer: 1500,
-      showConfirmButton: false,
+            if (mode === 'edit') {
+                const id = hiddenIdInput.value;
+                await updateMantenimiento(id, dto);
+                showAlert({ icon: "success", title: "¡Actualizado!", text: "El registro se actualizó correctamente." });
+            } else {
+                await createMantenimiento(dto);
+                showAlert({ icon: "success", title: "¡Creado!", text: "El nuevo mantenimiento se registró correctamente." });
+            }
+            closeModal();
+            load();
+        } catch (err) {
+            showAlert({ icon: "error", title: "Error", text: err.message || "No se pudo guardar el registro." });
+        }
     });
-  } catch (err) {
-    console.error("Error al eliminar mantenimiento:", err);
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: err.message || "No se pudo eliminar el mantenimiento",
+
+    // Delegación de eventos para botones de la tabla
+    tableBody?.addEventListener("click", async (e) => {
+        const btn = e.target.closest("button");
+        if (!btn) return;
+
+        const row = btn.closest("tr");
+        const id = row?.dataset.id;
+        if (!id) return;
+
+        if (btn.classList.contains("edit-btn")) {
+            const mantenimiento = await getMantenimientoById(id);
+            if (mantenimiento) {
+                lblModal.textContent = "Editar Mantenimiento";
+                formEl.dataset.mode = "edit";
+                hiddenIdInput.value = mantenimiento.idMantenimiento;
+                inpDescripcion.value = mantenimiento.descripcion;
+                await loadSelectOptions(mantenimiento.idVehiculo, mantenimiento.idTipoMantenimiento);
+                openModal();
+            }
+        } else if (btn.classList.contains("delete-btn")) {
+            handleDelete(id);
+        }
     });
-  }
-});
 
+    // --- Funciones de Carga y Renderizado ---
 
-
-
-
-
-
-
-
-
-
-document.addEventListener("DOMContentLoaded", () => {
-  const tbody        = document.getElementById("tblBodyMant");
-  const modalEl      = document.getElementById("mantModal");
-  const modalContent = document.getElementById("mant-modal-content");
-  const formEl       = document.getElementById("mantForm");
-  const selVehiculo  = document.getElementById("idVehiculo");
-  const selTipo      = document.getElementById("idTipoMantenimiento");
-  const inpFecha     = document.getElementById("fechaMant");
-  const btnClose     = document.getElementById("mant-close-btn");
-  const btnCancel    = document.getElementById("mant-cancel-btn");
-  const titleEl      = document.getElementById("mantModalLabel");
-
-  if (!tbody || !formEl) return;
-
-  let editingId = null;
-
-  // ================= Helpers =================
-  function showModal() {
-    if (!modalEl || !modalContent) return;
-    modalEl.classList.remove("hidden");
-    requestAnimationFrame(() => {
-      modalEl.classList.remove("opacity-0");
-      modalContent.classList.remove("opacity-0", "scale-95", "translate-y-4");
-    });
-  }
-  function hideModal() {
-    if (!modalEl || !modalContent) return;
-    modalEl.classList.add("opacity-0");
-    modalContent.classList.add("opacity-0", "scale-95", "translate-y-4");
-    setTimeout(() => modalEl.classList.add("hidden"), 200);
-  }
-  function setEditMode(id) {
-    editingId = Number(id) || null;
-    formEl && (formEl.dataset.mode = "edit"); // <- clave para evitar POST
-    titleEl && (titleEl.textContent = `Editar mantenimiento #${editingId ?? ""}`);
-    const submitBtn = formEl?.querySelector('button[type="submit"]');
-    submitBtn && (submitBtn.textContent = "Actualizar");
-  }
-  function resetMode() {
-    editingId = null;
-    if (formEl) formEl.dataset.mode = "create";
-    const submitBtn = formEl?.querySelector('button[type="submit"]');
-    submitBtn && (submitBtn.textContent = "Guardar");
-    titleEl && (titleEl.textContent = "Nuevo mantenimiento");
-  }
-  // "30/06/2025, 12:00 p. m." -> "2025-06-30T12:00"
-  function toDatetimeLocalFromCell(cellText) {
-    if (!cellText) return "";
-    const t = cellText.replace(",", "").replace(/\s+(a\.?m\.?|p\.?m\.?)$/i, "").trim(); // tolera am/pm local
-    // dd/mm/yyyy HH:MM
-    const m = t.match(/^(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}):(\d{2})/);
-    if (!m) return "";
-    const [, dd, mm, yyyy, HH, MM] = m;
-    return `${yyyy}-${mm}-${dd}T${HH}:${MM}`;
-  }
-  async function cargarVehiculosEnSelect(preferPlaca) {
-    if (!selVehiculo) return;
-    selVehiculo.innerHTML = `<option value="">Cargando…</option>`;
-    const data = await getVehiculosMin(); // [{ idVehiculo, placa }]
-    selVehiculo.innerHTML = `<option value="">Seleccione…</option>`;
-    for (const v of (data || [])) {
-      const opt = document.createElement("option");
-      opt.value = String(v.idVehiculo);
-      opt.textContent = v.placa ?? "";
-      if (preferPlaca && (v.placa ?? "").trim() === preferPlaca.trim()) opt.selected = true;
-      selVehiculo.appendChild(opt);
-    }
-  }
-  async function cargarTiposEnSelect(preferNombre) {
-    if (!selTipo) return;
-    selTipo.innerHTML = `<option value="">Cargando…</option>`;
-    const data = await getTiposMantenimientoMin(); // [{ idTipoMantenimiento, nombreTipo }]
-    selTipo.innerHTML = `<option value="">Seleccione…</option>`;
-    for (const t of (data || [])) {
-      const opt = document.createElement("option");
-      opt.value = String(t.idTipoMantenimiento);
-      opt.textContent = t.nombreTipo ?? "";
-      if (preferNombre && (t.nombreTipo ?? "").trim() === preferNombre.trim()) opt.selected = true;
-      selTipo.appendChild(opt);
-    }
-  }
-
-  // ================= Abrir modal en modo edición =================
-  tbody.addEventListener("click", async (e) => {
-    const editBtn = e.target.closest?.(".edit-btn");
-    if (!editBtn) return;
-
-    const row = editBtn.closest("tr");
-    if (!row) return;
-
-    // Según tu renderTable: [0]=id, [1]=placa, [2]=modelo, [3]=tipo, [4]=descripcion, [5]=fecha
-    const cells = row.querySelectorAll("td");
-    const id        = cells?.[0]?.textContent?.trim();
-    const placaTxt  = cells?.[1]?.textContent?.trim() || "";
-    const tipoTxt   = cells?.[3]?.textContent?.trim() || "";
-    const descTxt   = cells?.[4]?.textContent?.trim() || "";
-    const fechaCell = cells?.[5]?.textContent?.trim() || "";
-
-    if (!id) {
-      Swal?.fire?.({ icon: "error", title: "Error", text: "No se pudo obtener el ID del mantenimiento." });
-      return;
+    async function load() {
+        try {
+            const data = await getMantenimientos(state);
+            renderTable(data.items);
+            renderInfo(data);
+            renderPager(data);
+        } catch (err) {
+            tableBody.innerHTML = `<tr><td colspan="6" class="px-6 py-6 text-center text-red-500">Error al cargar datos: ${err.message}</td></tr>`;
+        }
     }
 
-    try {
-      formEl.reset();
-      setEditMode(id);
+    async function loadSelectOptions(selectedVehicleId = null, selectedTypeId = null) {
+        try {
+            const [vehiculos, tipos] = await Promise.all([
+                getVehiculosMin(),
+                getTiposMantenimientoMin()
+            ]);
 
-      // Carga combos y preselecciona por texto
-      await Promise.all([
-        cargarVehiculosEnSelect(placaTxt),
-        cargarTiposEnSelect(tipoTxt),
-      ]);
+            selVehiculo.innerHTML = '<option value="">Seleccione un vehículo...</option>';
+            vehiculos.forEach(v => {
+                const opt = document.createElement("option");
+                opt.value = v.idVehiculo;
+                opt.textContent = `${v.placa} - ${v.modelo || ''}`;
+                if (v.idVehiculo == selectedVehicleId) opt.selected = true;
+                selVehiculo.appendChild(opt);
+            });
 
-      if (formEl?.descripcion) formEl.descripcion.value = descTxt;
-      if (inpFecha) inpFecha.value = toDatetimeLocalFromCell(fechaCell);
+            selTipo.innerHTML = '<option value="">Seleccione un tipo...</option>';
+            tipos.forEach(t => {
+                const opt = document.createElement("option");
+                opt.value = t.idTipoMantenimiento;
+                opt.textContent = t.nombreTipo;
+                 if (t.idTipoMantenimiento == selectedTypeId) opt.selected = true;
+                selTipo.appendChild(opt);
+            });
 
-      showModal();
-    } catch (err) {
-      console.error("Error preparando edición:", err);
-      Swal?.fire?.({ icon: "error", title: "Error", text: err.message || "No se pudo abrir el editor." });
+        } catch (error) {
+            showAlert({ icon: 'error', title: 'Error de carga', text: 'No se pudieron cargar las opciones para el formulario.' });
+        }
     }
-  });
 
-  // ================= Enviar PUT (intercepta y bloquea POST) =================
-  formEl.addEventListener("submit", async (e) => {
-    // Si NO estamos en edición, no hacemos nada: dejamos que el controller de CREATE procese el submit
-    if ((formEl.dataset.mode || "create") !== "edit") return;
-
-    // Clave para evitar que el otro listener (crear) también se ejecute
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    const submitBtn = formEl.querySelector('button[type="submit"]');
-    submitBtn && (submitBtn.disabled = true);
-
-    try {
-      const idVehiculo          = Number(selVehiculo?.value || 0);
-      const idTipoMantenimiento = Number(selTipo?.value || 0);
-      const descripcion         = (formEl.descripcion?.value || "").trim();
-      const fecha               = inpFecha?.value || "";
-
-      if (!editingId)                 throw new Error("ID inválido.");
-      if (!idVehiculo)                throw new Error("Debe seleccionar un vehículo.");
-      if (!idTipoMantenimiento)       throw new Error("Debe seleccionar un tipo de mantenimiento.");
-      if (!fecha)                     throw new Error("Debe seleccionar una fecha.");
-
-      await updateMantenimiento(editingId, {
-        idMantenimiento: editingId, // por si tu backend lo requiere
-        idVehiculo,
-        idTipoMantenimiento,
-        descripcion,
-        fecha,
-      });
-
-      await Swal?.fire?.({
-        icon: "success",
-        title: "¡Actualizado!",
-        text: `Mantenimiento #${editingId} actualizado correctamente.`,
-        timer: 1400,
-        showConfirmButton: false,
-      });
-
-      formEl.reset();
-      resetMode();
-      hideModal();
-      document.dispatchEvent(new Event("mantenimientos:refresh"));
-    } catch (err) {
-      console.error("PUT mantenimiento falló:", err);
-      Swal?.fire?.({ icon: "error", title: "Error", text: err.message || "No se pudo actualizar el mantenimiento." });
-    } finally {
-      submitBtn && (submitBtn.disabled = false);
+    function renderTable(items) {
+        tableBody.innerHTML = "";
+        if (!items?.length) {
+            tableBody.innerHTML = `<tr><td colspan="6" class="px-6 py-6 text-center text-yinmn-blue dark:text-silver-lake-blue">No hay registros de mantenimiento.</td></tr>`;
+            return;
+        }
+        tableBody.innerHTML = items.map(it => `
+            <tr class="border-b dark:border-rich-black" data-id="${it.idMantenimiento}">
+                <td class="px-6 py-4 font-medium dark:text-white">${it.modelo ?? "N/A"}</td>
+                <td class="px-6 py-4">${it.placa ?? "N/A"}</td>
+                <td class="px-6 py-4"><span class="bg-silver-lake-blue/20 dark:bg-silver-lake-blue/10 text-yinmn-blue dark:text-platinum px-2 py-1 rounded-full text-xs">${it.tipoMantenimiento ?? "General"}</span></td>
+                <td class="px-6 py-4 text-yinmn-blue dark:text-silver-lake-blue">${it.descripcion ?? "Sin descripción"}</td>
+                <td class="px-6 py-4">${fmtDate(it.fecha)}</td>
+                <td class="px-6 py-4 text-center">
+                    <div class="flex items-center justify-center space-x-2">
+                         <button class="edit-btn p-2 bg-silver-lake-blue/20 hover:bg-silver-lake-blue/40 text-yinmn-blue dark:bg-yinmn-blue/30 dark:hover:bg-yinmn-blue/50 dark:text-platinum rounded-lg transition-colors" title="Editar">
+                            <i class="w-5 h-5 pointer-events-none" data-lucide="file-pen-line"></i>
+                        </button>
+                        <button class="delete-btn p-2 bg-red-500/20 hover:bg-red-500/30 text-red-600 dark:text-red-400 rounded-lg transition-colors" title="Eliminar">
+                            <i class="w-5 h-5 pointer-events-none" data-lucide="trash-2"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `).join("");
+        lucide.createIcons();
     }
-  }, { capture: true }); // <- corre antes que el listener del CREATE
 
-  // ================= Cerrar / Cancelar =================
-  btnClose?.addEventListener("click", () => { resetMode(); hideModal(); });
-  btnCancel?.addEventListener("click", () => { resetMode(); hideModal(); });
-  modalEl?.addEventListener("click", (e) => { if (e.target === modalEl) { resetMode(); hideModal(); } });
+    function renderInfo({ total, page, size }) {
+        if (!total) { pageInfo.textContent = "Sin resultados"; return; }
+        const from = page * size + 1;
+        const to = Math.min(total, (page + 1) * size);
+        pageInfo.textContent = `Mostrando ${from}-${to} de ${total}`;
+    }
+
+    function renderPager({ totalPages, page }) {
+        pager.innerHTML = "";
+        if (totalPages <= 1) return;
+        const createPageLink = (text, pageNum, isDisabled = false, isActive = false) => {
+            const li = document.createElement("li");
+            const link = document.createElement("a");
+            link.href = "#";
+            link.innerHTML = text;
+            link.className = `relative block py-2 px-3 text-sm rounded-lg border transition-colors ${
+                isDisabled ? 'opacity-50 cursor-not-allowed' : ''
+            } ${
+                isActive 
+                ? 'bg-yinmn-blue border-yinmn-blue text-white' 
+                : 'bg-white dark:bg-oxford-blue border-platinum dark:border-rich-black text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum/80 dark:hover:bg-rich-black/80'
+            }`;
+            if (!isDisabled) {
+                link.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    state.page = pageNum;
+                    load();
+                });
+            }
+            li.appendChild(link);
+            return li;
+        };
+        pager.appendChild(createPageLink('«', page - 1, page === 0));
+        for (let i = 0; i < totalPages; i++) {
+            pager.appendChild(createPageLink(i + 1, i, false, i === page));
+        }
+        pager.appendChild(createPageLink('»', page + 1, page >= totalPages - 1));
+    }
+
+    function handleDelete(id) {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: `El registro de mantenimiento #${id} será eliminado.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Sí, eliminar',
+            customClass: {
+                popup: 'bg-white dark:bg-oxford-blue text-rich-black dark:text-platinum backdrop-blur-xl shadow-2xl rounded-xl',
+                title: 'text-rich-black dark:text-white',
+                htmlContainer: 'text-yinmn-blue dark:text-silver-lake-blue'
+            }
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await deleteMantenimiento(id);
+                    showAlert({ icon: 'success', title: 'Eliminado', text: 'El registro ha sido eliminado.' });
+                    load();
+                } catch (error) {
+                    showAlert({ icon: 'error', title: 'Error', text: error.message });
+                }
+            }
+        });
+    }
+
+    // --- Utilidades ---
+    const fmtDate = (iso) => iso ? new Date(iso).toLocaleDateString("es-SV") : "";
+    const showAlert = ({ icon, title, text }) => {
+        Swal.fire({ icon, title, text,
+            customClass: {
+                popup: 'bg-white dark:bg-oxford-blue text-rich-black dark:text-platinum backdrop-blur-xl shadow-2xl rounded-xl',
+                title: 'text-rich-black dark:text-white',
+                htmlContainer: 'text-yinmn-blue dark:text-silver-lake-blue'
+            }
+        });
+    };
 });

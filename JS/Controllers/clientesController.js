@@ -1,177 +1,59 @@
-// --- LÓGICA DEL NAVBAR (Idéntica a la de clientes) ---
-const mobileMenuButton = document.getElementById('mobile-menu-button');
-const mobileMenu = document.getElementById('mobile-menu');
-const themeToggleBtns = document.querySelectorAll('#theme-toggle, #theme-toggle-mobile');
-
-if (mobileMenuButton && mobileMenu) {
-    mobileMenuButton.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-    });
-}
-
-const setInitialTheme = () => {
-    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-    } else {
-        document.documentElement.classList.remove('dark');
-    }
-};
-setInitialTheme();
-
-themeToggleBtns.forEach(btn => {
-    btn.addEventListener('click', function () {
-        document.documentElement.classList.toggle('dark');
-        localStorage.setItem('color-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-    });
-});
-
-document.querySelectorAll('[data-dropdown-button]').forEach(button => {
-    button.addEventListener('click', (event) => {
-        event.stopPropagation();
-        const menu = button.nextElementSibling;
-        const isHidden = menu.classList.contains('hidden');
-        document.querySelectorAll('[data-dropdown-menu]').forEach(m => m.classList.add('hidden'));
-        if (isHidden) menu.classList.remove('hidden');
-    });
-});
-window.addEventListener('click', () => {
-    document.querySelectorAll('[data-dropdown-menu]').forEach(menu => menu.classList.add('hidden'));
-});
-
-document.querySelectorAll('[data-collapse-button]').forEach(button => {
-    button.addEventListener('click', () => {
-        const collapseId = button.getAttribute('data-collapse-button');
-        const collapseContent = document.getElementById(collapseId);
-        collapseContent.classList.toggle('hidden');
-    });
-});
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 import { getClientes, getClienteByDui, createCliente, updateCliente, deleteCliente } from '../Services/clientesServices.js';
 
-// Variables globales
+// --- Variables globales para estado de la UI ---
 let currentPage = 0;
-let currentSize = 10;
+let currentSize = 10; // Este valor se podría conectar a un <select> si se añade en el futuro.
 let currentSearchQuery = '';
-let currentSearchType = 'dui'; 
-let currentSort = 'fechaRegistro,desc';
+let currentSort = 'fechaRegistro,desc'; // Valor por defecto para la ordenación.
 
+// --- Función para mostrar alertas con SweetAlert2 ---
 const showAlert = (icon, title, text) => {
     Swal.fire({
         icon,
         title,
         text,
         customClass: {
-            container: 'dark:bg-gray-900',
-            popup: 'bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-200 backdrop-blur-xl shadow-2xl rounded-xl',
-            title: 'text-gray-900 dark:text-white',
+            container: 'dark:bg-rich-black/50',
+            popup: 'bg-white dark:bg-oxford-blue text-rich-black dark:text-platinum backdrop-blur-xl shadow-2xl rounded-xl',
+            title: 'text-rich-black dark:text-white',
+            htmlContainer: 'text-yinmn-blue dark:text-silver-lake-blue'
         }
     });
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Referencias a los elementos del DOM
-    const addClientBtn = document.getElementById('addClientBtn');
-    const clientModal = new bootstrap.Modal(document.getElementById('clientModal'));
-    const clientForm = document.getElementById('clientForm');
+    // --- Referencias a los elementos del DOM ---
     const clientTableBody = document.getElementById('client-table-body');
     const searchInput = document.getElementById('searchInput');
-    const searchType = document.getElementById('searchType');
-    const pageSizeSelect = document.getElementById('pageSize');
     const paginationUl = document.getElementById('pagination');
+    
+    // Referencias al Modal (manejado por funciones globales en el HTML)
+    const clientForm = document.getElementById('clientForm');
     const modalTitle = document.getElementById('clientModalLabel');
     const clientIdInput = document.getElementById('clientId');
-    
-    // Asignar referencias a los nuevos campos del formulario
     const clientDuiInput = document.getElementById('clientDui');
     const idUsuarioInput = document.getElementById('idUsuario');
     const clientPhoneInput = document.getElementById('clientPhone');
     const clientAddressInput = document.getElementById('clientAddress');
     const clientPointsInput = document.getElementById('clientPoints');
 
-    // Nuevas referencias para los campos de fecha y ordenación
-    const fechaDesdeInput = document.getElementById('fechaDesde');
-    const fechaHastaInput = document.getElementById('fechaHasta');
-    const sortSelect = document.getElementById('sortSelect');
-    const searchSection = document.getElementById('searchSection');
-    const fechaSection = document.getElementById('fechaSection');
-
-
-    // Maneja el cambio de tipo de búsqueda (texto vs. fecha)
-    searchType.addEventListener('change', () => {
-        currentSearchType = searchType.value;
-        
-        if (currentSearchType === 'fechaRegistro') {
-            if (searchSection) searchSection.classList.add('hidden');
-            if (fechaSection) fechaSection.classList.remove('hidden');
-            if (searchInput) searchInput.value = '';
-        } else {
-            if (searchSection) searchSection.classList.remove('hidden');
-            if (fechaSection) fechaSection.classList.add('hidden');
-            if (fechaDesdeInput) fechaDesdeInput.value = '';
-            if (fechaHastaInput) fechaHastaInput.value = '';
-        }
-        currentSearchQuery = '';
-        currentPage = 0;
-        cargarClientes();
-    });
-
-    // Maneja la búsqueda al escribir
+    // --- Lógica de Búsqueda Simplificada ---
+    // Se dispara al escribir en la única barra de búsqueda.
+    let searchTimeout;
     if (searchInput) {
         searchInput.addEventListener('input', () => {
-            currentSearchQuery = searchInput.value;
-            currentPage = 0;
-            cargarClientes();
-        });
-    }
-
-    // Maneja la búsqueda al cambiar fechas
-    if (fechaDesdeInput && fechaHastaInput) {
-        fechaDesdeInput.addEventListener('change', () => {
-            if (fechaDesdeInput.value && fechaHastaInput.value) {
-                currentSearchQuery = `${fechaDesdeInput.value}|${fechaHastaInput.value}`;
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                currentSearchQuery = searchInput.value;
                 currentPage = 0;
                 cargarClientes();
-            }
-        });
-
-        fechaHastaInput.addEventListener('change', () => {
-            if (fechaDesdeInput.value && fechaHastaInput.value) {
-                currentSearchQuery = `${fechaDesdeInput.value}|${fechaHastaInput.value}`;
-                currentPage = 0;
-                cargarClientes();
-            }
+            }, 500); // Pequeño retraso para no llamar a la API en cada tecla.
         });
     }
 
-    // Cambia la cantidad de registros por página
-    if (pageSizeSelect) {
-        pageSizeSelect.addEventListener("change", () => {
-            currentSize = parseInt(pageSizeSelect.value);
-            currentPage = 0;
-            cargarClientes();
-        });
-    }
-
-    // Cambia el criterio de ordenación
-    if (sortSelect) {
-        sortSelect.addEventListener("change", () => {
-            currentSort = sortSelect.value;
-            currentPage = 0;
-            cargarClientes();
-        });
-    }
-
-    // Botón para agregar, que resetea el formulario y abre el modal
-    if (addClientBtn) {
-        addClientBtn.addEventListener('click', () => {
-            limpiarFormulario();
-            modalTitle.textContent = 'Agregar Nuevo Cliente';
-            if (clientDuiInput) clientDuiInput.removeAttribute('readonly');
-            clientModal.show();
-        });
-    }
-
+    // --- Lógica del Formulario y Modal (ya no usa Bootstrap) ---
+    // Las funciones openModal() y closeModal() están definidas en el HTML.
+    
     // Evento de submit para el formulario (crear o editar)
     if (clientForm) {
         clientForm.addEventListener("submit", async (e) => {
@@ -184,8 +66,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (clientTableBody) {
         clientTableBody.addEventListener('click', (e) => {
             const button = e.target.closest('button');
-            const dui = button?.dataset.id;
+            if (!button) return;
+
+            const dui = button.dataset.id;
             if (!dui) return;
+
             if (button.classList.contains('edit-btn')) {
                 setFormulario(dui);
             } else if (button.classList.contains('delete-btn')) {
@@ -194,27 +79,31 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- Funciones del controlador ---
+    // --- Funciones del Controlador ---
 
     async function cargarClientes() {
         try {
-            const response = await getClientes(currentPage, currentSize, currentSort, currentSearchType, currentSearchQuery);
+            // Se asume que la API puede manejar una búsqueda por DUI o un listado general.
+            // La lógica del service ya maneja esto. Aquí se simplifica la llamada.
+            const searchType = /^\d{8}-\d$/.test(currentSearchQuery) ? 'dui' : 'direccion'; // Busca por dirección como fallback
+            const response = await getClientes(currentPage, currentSize, currentSort, searchType, currentSearchQuery);
             
             if (response && response.content) {
-                const { content: clientes, totalElements: totalClientes } = response;
-                renderizarClientes(clientes.filter(c => c !== null)); 
-                renderizarPaginacion(totalClientes, currentSize, currentPage + 1);
+                renderizarClientes(response.content.filter(c => c !== null)); 
+                renderizarPaginacion(response.totalElements, currentSize, currentPage + 1);
             } else {
                 renderizarClientes([]);
                 renderizarPaginacion(0, currentSize, 1);
             }
         } catch (error) {
             console.error('Error al cargar los clientes:', error);
-            showAlert('error', 'Error', 'No se pudieron cargar los clientes. Por favor, intente de nuevo más tarde.');
+            showAlert('error', 'Error', 'No se pudieron cargar los clientes.');
             renderizarClientes([]);
             renderizarPaginacion(0, currentSize, 1);
         }
     }
+    
+    // --- Lógica CRUD ---
 
     async function guardarCliente() {
         const isEditing = !!clientIdInput.value;
@@ -223,65 +112,55 @@ document.addEventListener("DOMContentLoaded", () => {
             idUsuario: Number(idUsuarioInput.value),
             telefono: clientPhoneInput.value,
             direccion: clientAddressInput.value,
-    
             puntosActuales: Number(clientPointsInput.value),
         };
 
         try {
-            let res;
-            if (isEditing) {
-                res = await updateCliente(clientIdInput.value, clientData);
-            } else {
-                res = await createCliente(clientData);
-            }
+            const res = isEditing
+                ? await updateCliente(clientIdInput.value, clientData)
+                : await createCliente(clientData);
 
-            // Manejo de la respuesta
             if (res.ok) {
                 showAlert('success', 'Éxito', `Cliente ${isEditing ? 'actualizado' : 'creado'} correctamente.`);
-                clientModal.hide();
+                closeModal(); // Usa la función global del HTML
                 await cargarClientes();
             } else {
                 const errorData = await res.json();
-                const message = errorData.message || (isEditing ? 'No se pudo actualizar el cliente.' : 'No se pudo crear el cliente.');
-                showAlert('error', 'Error', message);
+                showAlert('error', 'Error', errorData.message || 'No se pudo guardar el cliente.');
             }
         } catch (error) {
-            console.error('Error al guardar el cliente:', error);
-            const errorMessage = error.message || 'Error de conexión. Intente de nuevo más tarde.';
-            showAlert('error', 'Error', errorMessage);
+            showAlert('error', 'Error', error.message || 'Error de conexión.');
         }
     }
 
     async function confirmarEliminarCliente(dui) {
         Swal.fire({
             title: '¿Estás seguro?',
-            text: "Esta acción no se puede revertir!",
+            text: "Esta acción no se puede revertir.",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#415a77', // yinmn-blue
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, eliminar!',
+            confirmButtonText: 'Sí, eliminar',
             cancelButtonText: 'Cancelar',
             customClass: {
-                popup: 'bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-200 backdrop-blur-xl shadow-2xl rounded-xl',
-                title: 'text-gray-900 dark:text-white',
+                 popup: 'bg-white dark:bg-oxford-blue text-rich-black dark:text-platinum backdrop-blur-xl shadow-2xl rounded-xl',
+                 title: 'text-rich-black dark:text-white',
+                 htmlContainer: 'text-yinmn-blue dark:text-silver-lake-blue'
             }
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
                     const res = await deleteCliente(dui);
                     if (res.ok) {
-                        showAlert('success', 'Eliminado!', 'El cliente ha sido eliminado.');
+                        showAlert('success', 'Eliminado', 'El cliente ha sido eliminado.');
                         await cargarClientes();
                     } else {
                         const errorData = await res.json();
-                        const message = errorData.error || 'No se pudo eliminar el cliente.';
-                        showAlert('error', 'Error', message);
+                        showAlert('error', 'Error', errorData.error || 'No se pudo eliminar el cliente.');
                     }
                 } catch (error) {
-                    console.error('Error al eliminar:', error);
-                    const errorMessage = error.message || 'No se pudo eliminar el cliente.';
-                    showAlert('error', 'Error', errorMessage);
+                    showAlert('error', 'Error', error.message || 'No se pudo eliminar el cliente.');
                 }
             }
         });
@@ -298,15 +177,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 idUsuarioInput.value = client.idUsuario;
                 clientPhoneInput.value = client.telefono;
                 clientAddressInput.value = client.direccion;
-                clientPointsInput.value = client.puntosActuales;
-                clientModal.show();
+                clientPointsInput.value = client.puntosActuales || 0;
+                openModal(); // Usa la función global del HTML
             } else {
                 showAlert('error', 'Error', 'Cliente no encontrado.');
             }
         } catch (error) {
-            console.error('Error al obtener los datos del cliente:', error);
-            const errorMessage = error.message || 'No se pudo cargar el cliente para editar.';
-            showAlert('error', 'Error', errorMessage);
+            showAlert('error', 'Error', error.message || 'No se pudo cargar el cliente para editar.');
         }
     }
 
@@ -316,133 +193,90 @@ document.addEventListener("DOMContentLoaded", () => {
         clientDuiInput.removeAttribute('readonly');
     }
 
+    // --- Funciones de Renderizado ---
+
     function renderizarClientes(clients) {
         clientTableBody.innerHTML = '';
-        if (!clients || !Array.isArray(clients) || clients.length === 0) {
+        if (!clients || clients.length === 0) {
             clientTableBody.innerHTML = `
                 <tr>
-                    <td colspan="7" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
-                        No hay clientes para mostrar.
+                    <td colspan="6" class="px-6 py-4 text-center text-yinmn-blue dark:text-silver-lake-blue">
+                        No se encontraron clientes.
                     </td>
-                </tr>
-            `;
+                </tr>`;
             return;
         }
 
         clients.forEach(client => {
             const tr = document.createElement("tr");
-            tr.className = "bg-white/40 dark:bg-gray-900/40 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-100/60 dark:hover:bg-gray-700/60 transition-colors";
+            tr.className = "border-b dark:border-rich-black";
 
-            const tdDui = document.createElement("td");
-            tdDui.className = "px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap";
-            tdDui.textContent = client.dui;
-            tr.appendChild(tdDui);
-
-            // ⚠️ LÍNEA CORREGIDA AQUI ⚠️
-            const tdIdUsuario = document.createElement("td");
-            tdIdUsuario.className = "px-6 py-4";
-            tdIdUsuario.textContent = client.idUsuario; 
-            tr.appendChild(tdIdUsuario);
-            
-            const tdTelefono = document.createElement("td");
-            tdTelefono.className = "px-6 py-4";
-            tdTelefono.textContent = client.telefono;
-            tr.appendChild(tdTelefono);
-
-            const tdDireccion = document.createElement("td");
-            tdDireccion.className = "px-6 py-4";
-            tdDireccion.textContent = client.direccion;
-            tr.appendChild(tdDireccion);
-            
-            const tdPuntos = document.createElement("td");
-            tdPuntos.className = "px-6 py-4";
-            tdPuntos.textContent = client.puntosActuales || 0;
-            tr.appendChild(tdPuntos);
-
-            const tdFecha = document.createElement("td");
-            tdFecha.className = "px-6 py-4";
-            tdFecha.textContent = new Date(client.fechaRegistro).toLocaleDateString();
-            tr.appendChild(tdFecha);
-
-            const tdBtns = document.createElement("td");
-            tdBtns.className = "px-6 py-4 text-center";
-            tdBtns.innerHTML = `
-                <div class="flex items-center justify-center space-x-2">
-                    <button class="edit-btn text-blue-600 hover:text-blue-800 transition-colors" data-id="${client.dui}">
-                        <i class="bi bi-pencil-square text-lg"></i>
+            tr.innerHTML = `
+                <td class="px-6 py-4 font-medium flex items-center space-x-3">
+                    <img src="https://placehold.co/40x40/778da9/ffffff?text=${client.nombreUsuario ? client.nombreUsuario.charAt(0) : 'U'}" class="w-10 h-10 rounded-full" alt="Avatar">
+                    <span class="dark:text-white">${client.nombreUsuario || 'N/A'}</span>
+                </td>
+                <td class="px-6 py-4">${client.dui}</td>
+                <td class="px-6 py-4">${client.telefono || 'N/A'}</td>
+                <td class="px-6 py-4">${client.puntosActuales || 0}</td>
+                <td class="px-6 py-4">
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-1 rounded-full">Activo</span>
+                </td>
+                <td class="px-6 py-4 text-center space-x-2">
+                    <button class="edit-btn p-2 bg-silver-lake-blue/20 hover:bg-silver-lake-blue/40 text-yinmn-blue dark:bg-yinmn-blue/30 dark:hover:bg-yinmn-blue/50 dark:text-platinum rounded-lg transition-colors" title="Editar" data-id="${client.dui}">
+                        <i data-lucide="file-pen-line" class="w-5 h-5 pointer-events-none"></i>
                     </button>
-                    <button class="delete-btn text-red-600 hover:text-red-800 transition-colors" data-id="${client.dui}">
-                        <i class="bi bi-trash-fill text-lg"></i>
+                    <button class="delete-btn p-2 bg-red-500/20 hover:bg-red-500/30 text-red-600 dark:text-red-400 rounded-lg transition-colors" title="Eliminar" data-id="${client.dui}">
+                        <i data-lucide="trash-2" class="w-5 h-5 pointer-events-none"></i>
                     </button>
-                </div>
+                </td>
             `;
-            tr.appendChild(tdBtns);
             clientTableBody.appendChild(tr);
         });
+        lucide.createIcons(); // Vuelve a renderizar los iconos de Lucide
     }
 
     function renderizarPaginacion(totalItems, itemsPerPage, current) {
         paginationUl.innerHTML = "";
         const totalPages = Math.ceil(totalItems / itemsPerPage);
+        if (totalPages <= 1) return;
 
-        const prev = document.createElement("li");
-        prev.className = `page-item ${current === 1 ? "disabled" : ""}`;
-        const prevLink = document.createElement("a");
-        prevLink.className = "page-link relative block py-2 px-3 text-sm rounded-lg border border-gray-300 bg-white leading-tight text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors";
-        prevLink.href = "#";
-        prevLink.textContent = "«";
-        prevLink.addEventListener("click", (e) => {
-            e.preventDefault();
-            if (current > 1) {
-                currentPage = current - 2;
-                cargarClientes();
-            }
-        });
-        prev.appendChild(prevLink);
-        paginationUl.appendChild(prev);
-
-        let startPage = Math.max(1, current - 2);
-        let endPage = Math.min(totalPages, current + 2);
-
-        if (current <= 3) {
-            endPage = Math.min(totalPages, 5);
-        }
-        if (current > totalPages - 2) {
-            startPage = Math.max(1, totalPages - 4);
-        }
-
-        for (let i = startPage; i <= endPage; i++) {
+        const createPageLink = (text, pageNum, isDisabled = false, isActive = false) => {
             const li = document.createElement("li");
-            li.className = `page-item ${i === current ? "active" : ""}`;
+            li.className = `page-item ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''} ${isActive ? 'z-10' : ''}`;
+            
             const link = document.createElement("a");
-            link.className = "page-link relative block py-2 px-3 text-sm rounded-lg border border-gray-300 bg-white leading-tight text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors";
             link.href = "#";
-            link.textContent = i;
-            link.addEventListener("click", (e) => {
-                e.preventDefault();
-                currentPage = i - 1;
-                cargarClientes();
-            });
+            link.innerHTML = text;
+            link.className = `relative block py-2 px-3 text-sm rounded-lg border ${
+                isActive 
+                ? 'bg-yinmn-blue border-yinmn-blue text-white' 
+                : 'bg-white dark:bg-oxford-blue border-platinum dark:border-rich-black text-yinmn-blue dark:text-silver-lake-blue hover:bg-platinum/80 dark:hover:bg-rich-black/80'
+            } transition-colors`;
+
+            if (!isDisabled) {
+                link.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    currentPage = pageNum;
+                    cargarClientes();
+                });
+            }
             li.appendChild(link);
-            paginationUl.appendChild(li);
+            return li;
+        };
+
+        // Botón "Anterior"
+        paginationUl.appendChild(createPageLink('«', current - 2, current === 1));
+
+        // Números de página
+        for (let i = 1; i <= totalPages; i++) {
+             paginationUl.appendChild(createPageLink(i, i - 1, false, i === current));
         }
 
-        const next = document.createElement("li");
-        next.className = `page-item ${current >= totalPages ? "disabled" : ""}`;
-        const nextLink = document.createElement("a");
-        nextLink.className = "page-link relative block py-2 px-3 text-sm rounded-lg border border-gray-300 bg-white leading-tight text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 transition-colors";
-        nextLink.href = "#";
-        nextLink.textContent = "»";
-        nextLink.addEventListener("click", (e) => {
-            e.preventDefault();
-            if (current < totalPages) {
-                currentPage = current;
-                cargarClientes();
-            }
-        });
-        next.appendChild(nextLink);
-        paginationUl.appendChild(next);
+        // Botón "Siguiente"
+        paginationUl.appendChild(createPageLink('»', current, current >= totalPages));
     }
 
+    // Carga inicial
     cargarClientes();
 });
