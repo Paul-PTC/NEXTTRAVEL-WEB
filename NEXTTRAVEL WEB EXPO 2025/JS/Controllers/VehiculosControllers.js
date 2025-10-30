@@ -17,14 +17,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const TableBody = document.querySelector("#itemTable tbody");
     const form = document.getElementById("VehiculoForm");
-    const modal = new bootstrap.Modal(document.getElementById("itemModal"));
+    const modal = document.getElementById("itemModal");
     const ModalLabel = document.getElementById("itemModalLabel");
     const btnAdd = document.getElementById("btnAdd");
 
     //-------------- Donde estaran  ------------------
-    const imageFileInput = document.getElementById("VehiculoImageFile"); //Input type="file"
-    const imageUrlHidden = document.getElementById("VehiculoImagenUrl"); //Campo Hidden
-    const imagePreview = document.getElementById("VehiculoImagePreview"); // Vehiculo preview <img>
+    const imageFileInput = document.getElementById("imageFile"); //Input type="file"
+    const imageUrlHidden = document.getElementById("image-preview-container"); //Campo Hidden
+    const imagePreview = document.getElementById("image-preview"); // Vehiculo preview <img>
 
 
     // ------ Selector de Tamaño Pagina ------
